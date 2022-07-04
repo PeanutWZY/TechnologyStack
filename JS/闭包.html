@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>闭包</h1>
+  <h2>为什么要有闭包</h2>
+  <!-- 避免变量被污染 -->
+  <!-- 私有化 -->
+  <!-- 保存变量 -->
+  <!-- 应用场景：防抖节流，库的封装（保证数据私有性） -->
+  <!-- 直接描述： 方法返回一个方法 -->
+  <script>
+    let a = '小曾'
+    function fn1 () {
+      let b = 1
+      console.log(a);
+    }
+
+    fn1()
+
+    // AO => Active Object
+    (function(){
+      let a = 2;
+      let b = 3;
+      function a(){
+  
+      }
+      return { a }
+    })
+
+  </script>
+</body>
+</html>

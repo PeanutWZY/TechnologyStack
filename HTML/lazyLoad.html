@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    img {
+      display: block;
+      margin-bottom: 50px;
+      width: 900px;
+      height: 450px;
+    }
+  </style>
+</head>
+<body>
+  <div></div>
+  <img src="../assets/lazyLoad/load.gif" data-src="../assets/lazyLoad/img1.jpg" alt="">
+  <img src="../assets/lazyLoad/load.gif" data-src="../assets/lazyLoad/img2.jpeg" alt="">
+  <img src="../assets/lazyLoad/load.gif" data-src="../assets/lazyLoad/img3.jpeg" alt="">
+  <img src="../assets/lazyLoad/load.gif" data-src="../assets/lazyLoad/img4.jpg" alt="">
+  <img src="../assets/lazyLoad/load.gif" data-src="../assets/lazyLoad/img5.jpg" alt="">
+  <img src="../assets/lazyLoad/load.gif" data-src="../assets/lazyLoad/img6.jpg" alt="">
+
+  <script>
+    let num = document.getElementsByTagName("img").length;
+    let img = document.getElementsByTagName("img")
+    let n = 0
+
+    lazyLoad();
+    window.onscroll  = lazyLoad
+
+    function lazyLoad() {
+      console.log(num);
+      let seeHeight = document.documentElement.clientHeight // 视口高度
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
+
+      for(let i=n; i<num; i++){
+        if(img[i].offsetTop < seeHeight + scrollTop){ // offsetTop 距document顶部的距离
+          if(img[i].getAttribute("src") == '../assets/lazyLoad/load.gif'){
+            img[i].src = img[i].getAttribute("data-src")
+          }
+          n = i + 1
+        }
+      }
+    }
+  </script>
+</body>
+</html>

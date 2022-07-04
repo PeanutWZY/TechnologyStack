@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h2>this指向问题</h2>
+  <script>
+    console.log(this); // 指向window
+
+    function a() {
+      console.log(this) // 指向window
+    }
+
+    window.a()
+
+    // 法则 => 谁调用指向谁(!!! 只指向上一个调用者)
+    let o = {
+      userName: '夏利',
+      fn: function() {
+        console.log(this);
+      }
+    }
+    o.fn();
+
+    var obj = {
+      userName: '大龙',
+      fn: function() {
+        console.log(this);
+      }
+    }
+    window.obj.fn()
+
+    var j = {
+      a:10,
+      b:{
+        a:12,
+        fn: function(){
+          console.log(this.a);
+        }
+      }
+    }
+    j.b.fn()
+
+    var id = 66;
+    function fn5() {
+      // 箭头函数没有作用域，没有this
+      setTimeout(() => {
+        console.log(this.id);
+      }, 500)
+    }
+    fn5({id:22}) // 打印出 66
+
+    //call，apply(), bind() 会改变this指向
+    // bind() 不调用，只改变this指向
+    // call， apply() 改变之后 并执行一次
+    // apply 传入 [], call 传入 {}
+    fn5.call({id:22}) // 打印出 22
+  </script>
+</body>
+</html>
