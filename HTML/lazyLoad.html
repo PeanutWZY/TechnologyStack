@@ -38,7 +38,7 @@
 
       for(let i=n; i<num; i++){
         if(img[i].offsetTop < seeHeight + scrollTop){ // offsetTop 距document顶部的距离
-          if(img[i].getAttribute("src") == '../assets/lazyLoad/load.gif'){
+          if(img[i].getAttribute("src") == '../assets/lazyLoad/load.gif'){ // getAttribute() 返回元素上一个指定的属性值。
             img[i].src = img[i].getAttribute("data-src")
           }
           n = i + 1
