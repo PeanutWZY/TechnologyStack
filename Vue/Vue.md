@@ -1,4 +1,4 @@
-# VUE篇-面试题
+# VUE篇
 
 ---
 ## Vue优点
@@ -11,7 +11,6 @@
 - 运行速度更快
 
 ---
-
 ## Vue底层实现原理
 vue.js是采用数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty()来劫持各个属性的setter和getter，在数据变动时发布消息给订阅者，触发相应的监听回调
 Vue是一个典型的MVVM框架，模型（Model）只是普通的javascript对象，修改它则视图（View）会自动更新。这种设计让状态管理变得非常简单而直观
@@ -25,9 +24,11 @@ Vue是一个典型的MVVM框架，模型（Model）只是普通的javascript对�
 
 - Compile（指令解析器） : Compile主要做的事情是解析模板指令，将模板中变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图
 
+- MVVM 作为数据绑定的入口，整合 Observer、Compile 和 Watcher 三者，通过 Observer 来监听自己的 model 数据变化，通过 Compile 来解析编译模板指令，最终利用 Watcher 搭起 Observer 和 Compile 之间的通信桥梁，达到数据变化 -> 视图更新；视图交互变化 (input) -> 数据 model 变更的双向绑定效果。
+
 ---
 
-## vue2和vue3响应式数据的理解
+## vue2和vue3响应式数据的理解/双向数据绑定的原理
 - 响应式数据的核心是数据变化能够被实时监控
 - 对象在vue2中采用了defineProperty（Vue.util.defineReactive）将数据定义成了响应式的数据（拦截所有属性增加了getter和setter）缺陷是需要递归遍历，不存在的属性无法被监控到。vue2里采用重写数组的方法来实现（7个变异方法，能改变原数组的方法）通过原型链 + 函数劫持的方法实现的（缺陷是不能检测到索引更改和数组长度的更改）
 - vue3采用了proxy可以直接对对象拦截，无需重写get和set方法，性能高，不需要直接递归，对数组没有采用defineProperty 因为数组很长的情况下用户可能不会操作索引更改数据
@@ -127,6 +128,12 @@ MVVM是一个软件架构设计模式，能够实现前端开发和后端业务�
 
 ## 为什么说VUE是一个渐进式的javascript框架, 渐进式是什么意思？
 VUE允许将一个网页分割成可复用的组件，每个组件都包含属于自己的HTML、CSS、JAVASCRIPT以用来渲染网页中相应的地方。对于VUE的使用可大可小，它都会有相应的方式来整合到你的项目中。所以说它是一个渐进式的框架。VUE是响应式的（reactive）这是VUE最独特的特性，也就是说当我们的数据变更时，VUE会帮你更新所有网页中用到它的地方。
+
+---
+## 请说下封装 vue 组件的过程
+首先，组件可以提升整个项目的开发效率。能够把页面抽象成多个相对独立的模块，解决了我们传统项目开发：效率低、难维护、复用性等问题。
+
+然后，使用 Vue.extend 方法创建一个组件，然后使用 Vue.component 方法注册组件。子组件需要数据，可以在 props 中接受定义。而子组件修改好数据后，想把数据传递给父组件。可以采用 emit 方法。
 
 ---
 
@@ -410,7 +417,7 @@ Vue是异步执行dom更新的，一旦观察到数据变化，Vue就会开启�
 
 ## Compute和watch区别和应用场景
 - computed 计算属性中的属性不需要在data中定义，而且必须有return
-```
+``` javascript
 data(){
 	return{
     	firstName:"张",
@@ -429,7 +436,7 @@ computehd(){
 ***应用场景***: 当一个变量的值受多个变量的值影响
 
 - watch 监听器watch中的值需要在data中定义，且函数有参数，newval和oldval
-```
+``` javascript
 data: {
   firstName: '张',
   lastName: '三',
@@ -501,9 +508,12 @@ Vuex允许我们将store分隔成模块（module），每个模块拥有自己�
 ## v-show 与 v-if 的区别，两者的优先级
 - v-show指令是通过修改元素的display的CSS属性让其显示或者隐藏；
 - v-if指令是直接销毁和重建DOM达到让元素显示和隐藏的效果；
-  
+
 使用v-show会更加节省性能上的开销；当只需要一次显示或隐藏时，使用v-if更加合理。
 
+
+---
+## v-for 和 v-if 的优先级
 - 优先级
 v-for优先级比v-if高(vue2.x中)
 
@@ -779,6 +789,12 @@ export const myMixin={
 3. created,mounted等，就会被合并调用，混合对象里的钩子函数在组件里的钩子函数之前调用，
 同一个钩子函数里，会先执行混入对象的东西，再执行本组件的。
 4. 在mixins里面包含异步请求函数的时候，通过直接调用异步函数获取返回数据
+
+***组件的选项和混入的选项是怎么合并的***
+数据对象【data 选项】，在内部进行递归合并，并在发生冲突时以组件数据优先；
+同名钩子函数将合并为一个数组，因此都将被调用。另外，混入对象的钩子将在组件自身钩子之前调用；
+watch 对象合并时，相同的 key 合成一个对象，且混入监听在组件监听之前调用；
+值为对象的选项【filters 选项、computed 选项、methods 选项、components 选项、directives 选项】将被合并为同一个对象。两个对象键名冲突时，取组件对象的键值对。
 
 ***运用场景区别***：
 - vuex：用来做状态管理，可以看做全局变量，里面定义的变量在每个组件中均可以使用和修改，
@@ -1175,7 +1191,7 @@ export default {
 ---
 
 ## vue-loader是什么？用途？
-
+vue 文件的一个加载器，跟 template/js/style 转换成 js 模块
 - 作用：解析和转换.vue文件，提取其中的逻辑代码scrpt，样式代码style，以及html，模板template，在分别把他们交给对应的loader处理
 - 用途：js可以写成es6，style样式可以scss或less，template可以加js
 
@@ -1414,4 +1430,54 @@ template作用时模板占位符，可以包裹元素，循环过程中template�
 1. 获取模板，并将模板通过compile编译器（通过正则等方式解析template里面的指令，class、style等）编译成AST语法树
 2. 把得到的AST通过generate转化成render渲染函数，render函数返回值是vdom
 3. vue构造函数直接使用render渲染函数渲染dom
-   
+
+简而言之，就是先转化成 AST 树，再得到的 render 函数返回 VNode（Vue 的虚拟 DOM 节点），详细步骤如下：
+首先，通过 compile 编译器把 template 编译成 AST 语法树（abstract syntax tree 即 源代码的抽象语法结构的树状表现形式），compile 是 createCompiler 的返回值，createCompiler 是用以创建编译器的。另外 compile 还负责合并 option。
+然后，AST 会经过 generate（将 AST 语法树转化成 render funtion 字符串的过程）得到 render 函数，render 的返回值是 VNode，VNode 是 Vue 的虚拟 DOM 节点，里面有（标签名、子节点、文本等等）
+
+---
+## vue 如何监听对象或者数组某个属性的变化
+当在项目中直接设置数组的某一项的值，或者直接设置对象的某个属性值，这个时候，你会发现页面并没有更新。这是因为 Object.defineProperty () 限制，监听不到变化。
+
+解决方式：
+this.$set (你要改变的数组 / 对象，你要改变的位置 /key，你要改成什么 value)
+this.$set(this.arr, 0, "OBKoro1"); // 改变数组
+this.$set(this.obj, "c", "OBKoro1"); // 改变对象
+
+或者调用以下几个数组的方法
+splice()、 push()、pop()、shift()、unshift()、sort()、reverse()
+vue 源码里缓存了 array 的原型链，然后重写了这几个方法，触发这几个方法的时候会 observer 数据，意思是使用这些方法不用我们再进行额外的操作，视图自动进行更新。 推荐使用 splice 方法会比较好自定义，因为 splice 可以在数组的任何位置进行删除 / 添加操作
+
+---
+## vue 如何获取 dom
+先给标签设置一个 ref 值，再通过 this.$refs.domName 获取，例如：
+``` javascript
+<div ref="test"></div>
+```
+const dom = this.$refs.test
+
+---
+## v-on 可以监听多个方法吗？
+可以
+``` javascript
+<input type="text" v-on="{ input:onInput,focus:onFocus,blur:onBlur, }">
+```
+
+---
+## assets 和 static 的区别
+这两个都是用来存放项目中所使用的静态资源文件。
+两者的区别：
+- assets 中的文件在运行 npm run build 的时候会打包，简单来说就是会被压缩体积，代码格式化之类的。打包之后也会放到 static 中。
+- static 中的文件则不会被打包。
+- 建议：将图片等未处理的文件放在 assets 中，打包减少体积。而对于第三方引入的一些资源文件如 iconfont.css 等可以放在 static 中，因为这些文件已经经过处理了。
+
+---
+## vue 初始化页面闪动问题
+使用 vue 开发时，在 vue 初始化之前，由于 div 是不归 vue 管的，所以我们写的代码在还没有解析的情况下会容易出现花屏现象，看到类似于`{{message}}` 的字样，虽然一般情况下这个时间很短暂，但是我们还是有必要让解决这个问题的。
+首先：在 css 里加上以下代码
+[v-cloak] {
+    display: none;
+}
+
+---
+## 
