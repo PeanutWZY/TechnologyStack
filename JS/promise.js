@@ -42,6 +42,7 @@ let promise = new Promise((reject,resolve)=>{
   resolve("return resolve");
 });
 promise.then(data=>{
-  console.log(`success${data}`);},err=>{
+  console.log(`success${data}`);},
+  err=>{
   console.log(`err${data}`);
 })

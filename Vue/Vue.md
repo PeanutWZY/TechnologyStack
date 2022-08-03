@@ -1449,21 +1449,6 @@ splice()、 push()、pop()、shift()、unshift()、sort()、reverse()
 vue 源码里缓存了 array 的原型链，然后重写了这几个方法，触发这几个方法的时候会 observer 数据，意思是使用这些方法不用我们再进行额外的操作，视图自动进行更新。 推荐使用 splice 方法会比较好自定义，因为 splice 可以在数组的任何位置进行删除 / 添加操作
 
 ---
-## vue 如何获取 dom
-先给标签设置一个 ref 值，再通过 this.$refs.domName 获取，例如：
-``` javascript
-<div ref="test"></div>
-```
-const dom = this.$refs.test
-
----
-## v-on 可以监听多个方法吗？
-可以
-``` javascript
-<input type="text" v-on="{ input:onInput,focus:onFocus,blur:onBlur, }">
-```
-
----
 ## assets 和 static 的区别
 这两个都是用来存放项目中所使用的静态资源文件。
 两者的区别：
@@ -1480,4 +1465,340 @@ const dom = this.$refs.test
 }
 
 ---
-## 
+## vue如何获取DOM
+先给标签设置一个 ref 值，再通过 this.$refs.domName 获取，例如：
+``` html
+<div ref="test"></div>
+const dom = this.$refs.test
+```
+首先ref的引用是相当于一个DOM节点（如果是子组件则指向的是其实例），而且是一个string类型的值。
+通俗的将就类似于原生js用document.getElementById("#id")
+但是只是类似，他们的不同点是Vue是操控虚拟DOM ，也就是说在渲染初期并没有这个ref的属性，这个属性是在创建Vue实例以后才被加到虚拟DOM中的。所以在官方文档的最后提醒开发者不能将ref的结果在模版中进行数据绑定
+
+this.$refs是什么呢？
+通俗的将就是搜集所有的ref的一个对象。通过this.$refs 可以访问到此vue实例中的所有设置了ref属性的DOM元素，并对其进行操作。
+其实组件中的子组件的ref原理也类似，只是指向的不是原组件而是组件的实例。
+用法和普通DOM元素一样。
+
+--- 
+## 请说下封装 vue 组件的过程
+首先，组件可以提升整个项目的开发效率。能够把页面抽象成多个相对独立的模块，解决了我们传统项目开发：效率低、难维护、复用性等问题。
+然后，使用 Vue.extend 方法创建一个组件，然后使用 Vue.component 方法注册组件。子组件需要数据，可以在 props 中接受定义。而子组件修改好数据后，想把数据传递给父组件。可以采用 emit 方法。
+
+---
+## v-on 可以监听多个方法吗？
+是可以的，来个例子：
+<input type="text" v-on="{ input:onInput,focus:onFocus,blur:onBlur, }">
+
+---
+## 20.computed 中的属性名和 data 中的属性名可以相同吗？
+不能同名，因为不管是 computed 属性名还是 data 数据名还是 props 数据名都会被挂载在 vm 实例上，因此这三个都不能同名。
+
+---
+## 怎么强制刷新组件？
+this.$forceUpdate()。
+组件上加上 key，然后变化 key 的值。
+
+---
+## 怎么访问子组件的实例或者子元素？
+先用 ref 特性为子组件赋予一个 ID 引用 <base-input ref="myInput"></<base-input>
+
+比如子组件有个 focus 的方法，可以这样调用 this.$refs.myInput.focus()；
+比如子组件有个 value 的数据，可以这样使用 this.$refs.myInput.value。
+先用 ref 特性为普通的 DOM 元素赋予一个 ID 引用
+``` html
+<ul ref="mydiv">
+    <li class="item">第一个li</li>
+    <li class="item">第一个li</li>
+</ul>
+console.log(this.$refs['mydiv'].getElementsByClassName('item')[0].innerHTML)//第一个li
+```
+
+---
+## 怎么在子组件中访问父组件的实例？怎么在组件中访问到根实例？
+使用 this.$parent 来访问
+this.$root
+
+---
+## 组件会在什么时候下被销毁？
+- 没有使用 keep-alive 时的路由切换；
+- v-if='false'；
+- 执行 vm.$destroy()；
+
+---
+## is 这个特性你有用过吗？主要用在哪些方面？
+动态组件
+`<component :is="componentName"></component>`， componentName 可以是在本页面已经注册的局部组件名和全局组件名，也可以是一个组件的选项对象。 当控制 componentName 改变时就可以动态切换选择组件。
+is 的用法
+有些 HTML 元素，诸如 `<ul>`、`<ol>`、`<table>` 和 `<select>`，对于哪些元素可以出现在其内部是有严格限制的。
+而有些 HTML 元素，诸如 `<li>`、`<tr>` 和 `<option>`，只能出现在其它某些特定的元素内部。
+``` html
+<ul>
+    <card-list></card-list>
+</ul>
+```
+所以上面 `<card-list></card-list>` 会被作为无效的内容提升到外部，并导致最终渲染结果出错。应该这么写：
+``` html
+<ul>
+    <li is="cardList"></li>
+</ul>
+```
+---
+## prop 验证的 type 类型有哪几种？
+String、Number、Boolean、Array、Object、Date、Function、Symbol， 此外还可以是一个自定义的构造函数 Personnel，并且通过 instanceof 来验证 propwokrer 的值是否是通过这个自定义的构造函数创建的。
+``` javascript
+function Personnel(name,age){
+    this.name = name;
+    this.age = age;
+}
+export default {
+    props:{
+        wokrer:Personnel
+    }
+}
+```
+---
+## 在 Vue 事件中传入 $event ，使用 $event.target和 event.currentTarget 有什么区别？
+$event.currentTarget 始终指向事件所绑定的元素，而 $event.target 指向事件发生时的元素。
+
+---
+## 使用事件修饰符要注意什么？
+要注意顺序很重要，用 @click.prevent.self 会阻止所有的点击，而 @click.self.prevent 只会阻止对元素自身的点击。
+
+---
+## 说说你对 Vue 的表单修饰符.lazy 的理解？
+input 标签 v-model 用 lazy 修饰之后，并不会立即监听 input 的 value 的改变，会在 input 失去焦点之后，才会监听 input 的 value 的改变。
+
+---
+## v-once 的使用场景有哪些？
+其作用是只渲染元素和组件一次。随后的重新渲染，元素 / 组件及其所有的子节点将被视为静态内容并跳过。故当组件中有大量的静态的内容可以使用这个指令。
+
+---
+## v-cloak 和 v-pre 有什么作用？
+v-cloak：可以解决在页面渲染时把未编译的 Mustache 标签（`{{value}}`）给显示出来。
+```
+[v-cloak] {
+    display: none!important;
+}
+<div v-cloak>
+    {{ message }}
+</div>
+```
+v-pre：跳过这个元素和它的子元素的编译过程。可以用来显示原始 Mustache 标签。跳过大量没有指令的节点会加快编译。
+```
+<span v-pre>{{ this will not be compiled }}</span>
+```
+
+---
+## 怎么使 css 样式只在当前组件中生效？在 style 上加 scoped 属性需要注意哪些？你知道 style 上加 scoped 属性的原理吗？
+<style lang="less" scoped> </style>
+如果在公共组件中使用，修改公共组件的样式需要用 /deep/。
+vue 通过在 DOM 结构以及 css 样式上加上唯一的标记 data-v-xxxxxx，保证唯一，达到样式私有化，不污染全局的作用。
+
+---
+## Vue 渲染模板时怎么保留模板中的 HTML 注释呢？
+在组件中将 comments 选项设置为 true
+`<template comments> ... <template>`
+
+---
+## Vue 中怎么重置 data？
+Object.assign(this.$data,this.$options.data())
+
+---
+## 过滤器中可以用 this 吗？
+不可以
+
+---
+## Vue在created和mounted这两个生命周期中请求数据有什么区别呢？
+在created中，页面视图未出现，如果请求信息过多，页面会长时间处于白屏状态，DOM节点没出来，无法操作DOM节点。在mounted不会这样，比较好。
+
+---
+## 说说你对keep-alive的理解
+keep-alive是一个抽象组件：它自身不会渲染一个DOM元素，也不会出现在父组件链中；使用keep-alive包裹动态组件时，会缓存不活动的组件实例，而不是销毁它们。
+其有三个参数
+
+include定义缓存白名单，会缓存的组件；
+exclude定义缓存黑名单，不会缓存的组件；
+以上两个参数可以是逗号分隔字符串、正则表达式或一个数组,include="a,b"、:include="/a|b/"、:include="['a', 'b']"；
+匹配首先检查组件自身的 name 选项，如果 name 选项不可用，则匹配它的局部注册名称 (父组件 components 选项的键值)。匿名组件不能被匹配；
+max最多可以缓存多少组件实例。一旦这个数字达到了，在新实例被创建之前，已缓存组件中最久没有被访问的实例会被销毁掉；
+不会在函数式组件中正常工作，因为它们没有缓存实例；
+当组件在内被切换，它的activated和deactivated这两个生命周期钩子函数将会被对应执行。
+
+---
+## v-if和v-for的优先级是什么？如果这两个同时出现时，那应该怎么优化才能得到更好的性能？
+当它们处于同一节点，v-for的优先级比v-if更高，这意味着v-if将分别重复运行于每个v-for循环中。当你只想为部分项渲染节点时，这种优先级的机制会十分有用。
+``` html
+<ul>
+    <li v-for="item in items" v-if="item.show">{{item}}</li>
+</ul>
+```
+如果你的目的是有条件地跳过循环的执行，那么可以将 v-if 置于外层元素 (或 <template>)上。
+``` html
+<ul v-if="items.length">
+    <li v-for="item in items">{{item}}</li>
+</ul>
+```
+
+41.使用v-for遍历对象时，是按什么顺序遍历的？如何保证顺序？
+按 Object.keys() 的顺序的遍历，转成数组保证顺序。
+
+42.key除了在v-for中使用，还有什么作用？
+还可以强制替换元素/组件而不是重复使用它。在以下场景可以使用
+
+完整地触发组件的生命周期钩子
+触发过渡
+<transition>
+  <span :key="text">{{ text }}</span>
+</transition>
+1
+2
+3
+当 text 发生改变时，<span>会随时被更新，因此会触发过渡。
+
+43.使用key要什么要注意的吗？
+不要使用对象或数组之类的非基本类型值作为key，请用字符串或数值类型的值；
+
+不要使用数组的index作为key值，因为在删除数组某一项，index也会随之变化，导致key变化，渲染会出错。
+
+例：在渲染[a,b,c]用 index 作为 key，那么在删除第二项的时候，index 就会从 0 1 2 变成 0 1（而不是 0 2)，随之第三项的key变成1了，就会误把第三项删除了。
+
+44.说说组件的命名规范
+给组件命名有两种方式，一种是使用链式命名my-component，一种是使用大驼峰命名MyComponent，
+
+在字符串模板中<my-component></my-component> 和 <MyComponent></MyComponent>都可以使用，
+在非字符串模板中最好使用<MyComponent></MyComponent>，因为要遵循W3C规范中的自定义组件名
+(字母全小写且必须包含一个连字符)，避免和当前以及未来的 HTML 元素相冲突。
+
+45.为什么组件中data必须用函数返回一个对象？
+对象为引用类型，当重用组件时，由于数据对象都指向同一个data对象，当在一个组件中修改data时，其他重用的组件中的data会同时被修改；而使用返回对象的函数，由于每次返回的都是一个新对象（Object的实例），引用地址不同，则不会出现这个问题。
+
+46.组件的name选项有什么作用？
+递归组件时，组件调用自身使用；
+用is特殊特性和component内置组件标签时使用；
+keep-alive内置组件标签中include 和exclude属性中使用。
+47.说下$attrs和$listeners的使用场景？
+$attrs: 包含了父作用域中（组件标签）不作为 prop 被识别 (且获取) 的特性绑定 (class 和 style 除外)。 在创建基础组件时候经常使用，可以和组件选项inheritAttrs:false和配合使用在组件内部标签上用v-bind="$attrs"将非prop特性绑定上去；
+
+$listeners: 包含了父作用域中（组件标签）的 (不含.native) v-on 事件监听器。 在组件上监听一些特定的事件，比如focus事件时，如果组件的根元素不是表单元素的，则监听不到，那么可以用v-on="$listeners"绑定到表单元素标签上解决。
+
+48.EventBus注册在全局上时，路由切换时会重复触发事件，如何解决呢？
+在有使用$on的组件中要在beforeDestroy钩子函数中用$off销毁。
+
+49.Vue组件里写的原生addEventListeners监听事件，要手动去销毁吗？为什么？
+要，不然会造成多次绑定和内存泄露。
+
+50.Vue组件里的定时器要怎么销毁？
+如果页面上有很多定时器，可以在data选项中创建一个对象timer，给每个定时器取个名字一一映射在对象timer中，在beforeDestroy构造函数中for(let k in this.timer){clearInterval(k)}；
+
+如果页面只有单个定时器，可以这么做。
+
+const timer = setInterval(() =>{}, 500);
+this.$once('hook:beforeDestroy', () => {
+   clearInterval(timer);
+})
+1
+2
+3
+4
+51.Vue中能监听到数组变化的方法有哪些？为什么这些方法能监听到呢？
+push()、pop()、shift()、unshift()、splice()、sort()、reverse()，这些方法在Vue中被重新定义了，故可以监听到数组变化；
+
+filter()、concat()、slice()，这些方法会返回一个新数组，也可以监听到数组的变化。
+
+52.在Vue中哪些数组变化无法监听，为什么，怎么解决？
+利用索引直接设置一个数组项时；
+
+修改数组的长度时。
+
+第一个情况，利用已有索引直接设置一个数组项时Object.defineProperty()是可以监听到，利用不存在的索引直接设置一个数组项时Object.defineProperty()是不可以监听到，但是官方给出的解释是由于JavaScript的限制，Vue不能检测以上数组的变动，其实根本原因是性能问题，性能代价和获得的用户体验收益不成正比。
+
+第二个情况，原因是Object.defineProperty()不能监听到数组的length属性。
+
+用this.$set(this.items, indexOfItem, newValue)或this.items.splice(indexOfItem, 1, newValue)来解决第一种情况；
+
+用this.items.splice(newLength)来解决第二种情况。
+
+53.在Vue中哪些对象变化无法监听，为什么，怎么解决？
+对象属性的添加
+对象属性的删除
+因为Vue是通过Object.defineProperty来将对象的key转成getter/setter的形式来追踪变化，但getter/setter只能追踪一个数据是否被修改，无法追踪新增属性和删除属性，所以才会导致上面对象变化无法监听。
+
+用this.$set(this.obj,"key","newValue")来解决第一种情况；
+用Object.assign来解决第二种情况。
+54.删除对象用delete和Vue.delete有什么区别？
+delete：只是被删除对象成员变为' '或undefined，其他元素键值不变；
+Vue.delete：直接删了对象成员，如果对象是响应式的，确保删除能触发更新视图，这个方法主要用于避开 Vue 不能检测到属性被删除的限制。
+55.<template></template>有什么用？
+当做一个不可见的包裹元素，减少不必要的DOM元素，整个结构会更加清晰。
+
+56.Vue怎么定义全局方法
+有三种
+
+挂载在Vue的prototype上
+
+// base.js
+const install = function (Vue, opts) {
+    Vue.prototype.demo = function () {
+        console.log('我已经在Vue原型链上')
+    }
+}
+export default {
+    install
+}
+复制代码
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+//main.js
+//注册全局函数
+import base from 'service/base';
+Vue.use(base);
+复制代码
+1
+2
+3
+4
+5
+利用全局混入mixin
+
+用this.$root.$on绑定方法，用this.$root.$off解绑方法，用this.$root.$emit全局调用。
+
+this.$root.$on('demo',function(){
+    console.log('test');
+})
+this.$root.$emit('demo')；
+this.$root.$off('demo')；
+1
+2
+3
+4
+5
+57.Vue怎么改变插入模板的分隔符？
+用delimiters选项,其默认是["{{", "}}"]
+
+// 将分隔符变成ES6模板字符串的风格
+new Vue({
+  delimiters: ['${', '}']
+})
+1
+2
+3
+4
+58.Vue变量名如果以_、$开头的属性会发生什么问题？怎么访问到它们的值？
+以 _ 或 $ 开头的属性 不会 被 Vue 实例代理，因为它们可能和 Vue 内置的属性、API 方法冲突，你可以使用例如 vm.$data._property 的方式访问这些属性。
+
+59.怎么捕获Vue组件的错误信息？
+errorCaptured是组件内部钩子，当捕获一个来自子孙组件的错误时被调用，接收error、vm、info三个参数，return false后可以阻止错误继续向上抛出。
+
+errorHandler为全局钩子，使用Vue.config.errorHandler配置，接收参数与errorCaptured一致，2.6后可捕捉v-on与promise链的错误，可用于统一错误处理与错误兜底。
+————————————————
+版权声明：本文为CSDN博主「萌萌哒の瑞萌萌」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/weixin_46232841/article/details/111332225
