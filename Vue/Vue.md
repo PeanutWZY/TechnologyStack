@@ -1640,103 +1640,97 @@ max最多可以缓存多少组件实例。一旦这个数字达到了，在新�
 </ul>
 ```
 
-41.使用v-for遍历对象时，是按什么顺序遍历的？如何保证顺序？
+---
+## 使用v-for遍历对象时，是按什么顺序遍历的？如何保证顺序？
 按 Object.keys() 的顺序的遍历，转成数组保证顺序。
 
-42.key除了在v-for中使用，还有什么作用？
+---
+## key除了在v-for中使用，还有什么作用？
 还可以强制替换元素/组件而不是重复使用它。在以下场景可以使用
-
 完整地触发组件的生命周期钩子
 触发过渡
+```
 <transition>
   <span :key="text">{{ text }}</span>
 </transition>
-1
-2
-3
-当 text 发生改变时，<span>会随时被更新，因此会触发过渡。
+```
+当 text 发生改变时，`<span`>会随时被更新，因此会触发过渡。
 
-43.使用key要什么要注意的吗？
+---
+## 使用key要什么要注意的吗？
 不要使用对象或数组之类的非基本类型值作为key，请用字符串或数值类型的值；
-
 不要使用数组的index作为key值，因为在删除数组某一项，index也会随之变化，导致key变化，渲染会出错。
-
 例：在渲染[a,b,c]用 index 作为 key，那么在删除第二项的时候，index 就会从 0 1 2 变成 0 1（而不是 0 2)，随之第三项的key变成1了，就会误把第三项删除了。
 
-44.说说组件的命名规范
+---
+## 说说组件的命名规范
 给组件命名有两种方式，一种是使用链式命名my-component，一种是使用大驼峰命名MyComponent，
-
 在字符串模板中<my-component></my-component> 和 <MyComponent></MyComponent>都可以使用，
 在非字符串模板中最好使用<MyComponent></MyComponent>，因为要遵循W3C规范中的自定义组件名
 (字母全小写且必须包含一个连字符)，避免和当前以及未来的 HTML 元素相冲突。
 
-45.为什么组件中data必须用函数返回一个对象？
+---
+## 为什么组件中data必须用函数返回一个对象？
 对象为引用类型，当重用组件时，由于数据对象都指向同一个data对象，当在一个组件中修改data时，其他重用的组件中的data会同时被修改；而使用返回对象的函数，由于每次返回的都是一个新对象（Object的实例），引用地址不同，则不会出现这个问题。
 
-46.组件的name选项有什么作用？
+---
+## 组件的name选项有什么作用？
 递归组件时，组件调用自身使用；
 用is特殊特性和component内置组件标签时使用；
 keep-alive内置组件标签中include 和exclude属性中使用。
-47.说下$attrs和$listeners的使用场景？
-$attrs: 包含了父作用域中（组件标签）不作为 prop 被识别 (且获取) 的特性绑定 (class 和 style 除外)。 在创建基础组件时候经常使用，可以和组件选项inheritAttrs:false和配合使用在组件内部标签上用v-bind="$attrs"将非prop特性绑定上去；
 
+---
+## 说下$attrs和$listeners的使用场景？
+$attrs: 包含了父作用域中（组件标签）不作为 prop 被识别 (且获取) 的特性绑定 (class 和 style 除外)。 在创建基础组件时候经常使用，可以和组件选项inheritAttrs:false和配合使用在组件内部标签上用v-bind="$attrs"将非prop特性绑定上去；
 $listeners: 包含了父作用域中（组件标签）的 (不含.native) v-on 事件监听器。 在组件上监听一些特定的事件，比如focus事件时，如果组件的根元素不是表单元素的，则监听不到，那么可以用v-on="$listeners"绑定到表单元素标签上解决。
 
-48.EventBus注册在全局上时，路由切换时会重复触发事件，如何解决呢？
+## EventBus注册在全局上时，路由切换时会重复触发事件，如何解决呢？
 在有使用$on的组件中要在beforeDestroy钩子函数中用$off销毁。
 
-49.Vue组件里写的原生addEventListeners监听事件，要手动去销毁吗？为什么？
+## Vue组件里写的原生addEventListeners监听事件，要手动去销毁吗？为什么？
 要，不然会造成多次绑定和内存泄露。
 
-50.Vue组件里的定时器要怎么销毁？
+## Vue组件里的定时器要怎么销毁？
 如果页面上有很多定时器，可以在data选项中创建一个对象timer，给每个定时器取个名字一一映射在对象timer中，在beforeDestroy构造函数中for(let k in this.timer){clearInterval(k)}；
-
 如果页面只有单个定时器，可以这么做。
-
 const timer = setInterval(() =>{}, 500);
 this.$once('hook:beforeDestroy', () => {
    clearInterval(timer);
 })
-1
-2
-3
-4
-51.Vue中能监听到数组变化的方法有哪些？为什么这些方法能监听到呢？
-push()、pop()、shift()、unshift()、splice()、sort()、reverse()，这些方法在Vue中被重新定义了，故可以监听到数组变化；
 
+---
+## Vue中能监听到数组变化的方法有哪些？为什么这些方法能监听到呢？
+push()、pop()、shift()、unshift()、splice()、sort()、reverse()，这些方法在Vue中被重新定义了，故可以监听到数组变化；
 filter()、concat()、slice()，这些方法会返回一个新数组，也可以监听到数组的变化。
 
-52.在Vue中哪些数组变化无法监听，为什么，怎么解决？
-利用索引直接设置一个数组项时；
-
-修改数组的长度时。
-
-第一个情况，利用已有索引直接设置一个数组项时Object.defineProperty()是可以监听到，利用不存在的索引直接设置一个数组项时Object.defineProperty()是不可以监听到，但是官方给出的解释是由于JavaScript的限制，Vue不能检测以上数组的变动，其实根本原因是性能问题，性能代价和获得的用户体验收益不成正比。
-
-第二个情况，原因是Object.defineProperty()不能监听到数组的length属性。
-
+---
+## 在Vue中哪些数组变化无法监听，为什么，怎么解决？
+利用索引直接设置一个数组项时；第一个情况，利用已有索引直接设置一个数组项时Object.defineProperty()是可以监听到，利用不存在的索引直接设置一个数组项时Object.defineProperty()是不可以监听到，但是官方给出的解释是由于JavaScript的限制，Vue不能检测以上数组的变动，其实根本原因是性能问题，性能代价和获得的用户体验收益不成正比。
 用this.$set(this.items, indexOfItem, newValue)或this.items.splice(indexOfItem, 1, newValue)来解决第一种情况；
 
+修改数组的长度时。第二个情况，原因是Object.defineProperty()不能监听到数组的length属性。
 用this.items.splice(newLength)来解决第二种情况。
 
-53.在Vue中哪些对象变化无法监听，为什么，怎么解决？
-对象属性的添加
-对象属性的删除
+---
+## 在Vue中哪些对象变化无法监听，为什么，怎么解决？
+对象属性的添加 用this.$set(this.obj,"key","newValue")来解决第一种情况；
+对象属性的删除 用Object.assign来解决第二种情况。
 因为Vue是通过Object.defineProperty来将对象的key转成getter/setter的形式来追踪变化，但getter/setter只能追踪一个数据是否被修改，无法追踪新增属性和删除属性，所以才会导致上面对象变化无法监听。
 
-用this.$set(this.obj,"key","newValue")来解决第一种情况；
-用Object.assign来解决第二种情况。
-54.删除对象用delete和Vue.delete有什么区别？
+---
+## 删除对象用delete和Vue.delete有什么区别？
 delete：只是被删除对象成员变为' '或undefined，其他元素键值不变；
 Vue.delete：直接删了对象成员，如果对象是响应式的，确保删除能触发更新视图，这个方法主要用于避开 Vue 不能检测到属性被删除的限制。
-55.<template></template>有什么用？
+
+---
+## `<template></template>`有什么用？
 当做一个不可见的包裹元素，减少不必要的DOM元素，整个结构会更加清晰。
 
-56.Vue怎么定义全局方法
+---
+## Vue怎么定义全局方法
 有三种
-
-挂载在Vue的prototype上
-
+1. 挂载在Vue的prototype上
+``` javascript
 // base.js
 const install = function (Vue, opts) {
     Vue.prototype.demo = function () {
@@ -1746,59 +1740,330 @@ const install = function (Vue, opts) {
 export default {
     install
 }
-复制代码
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
+
 //main.js
 //注册全局函数
 import base from 'service/base';
 Vue.use(base);
-复制代码
-1
-2
-3
-4
-5
-利用全局混入mixin
+```
 
-用this.$root.$on绑定方法，用this.$root.$off解绑方法，用this.$root.$emit全局调用。
+2. 利用全局混入mixin
 
+3. 用`this.$root.$on`绑定方法，用`this.$root.$off`解绑方法，用`this.$root.$emit`全局调用。
+``` javascript
 this.$root.$on('demo',function(){
     console.log('test');
 })
 this.$root.$emit('demo')；
 this.$root.$off('demo')；
-1
-2
-3
-4
-5
-57.Vue怎么改变插入模板的分隔符？
+```
+---
+## Vue怎么改变插入模板的分隔符？
 用delimiters选项,其默认是["{{", "}}"]
 
 // 将分隔符变成ES6模板字符串的风格
 new Vue({
   delimiters: ['${', '}']
 })
-1
-2
-3
-4
-58.Vue变量名如果以_、$开头的属性会发生什么问题？怎么访问到它们的值？
+
+---
+## Vue变量名如果以_、$开头的属性会发生什么问题？怎么访问到它们的值？
 以 _ 或 $ 开头的属性 不会 被 Vue 实例代理，因为它们可能和 Vue 内置的属性、API 方法冲突，你可以使用例如 vm.$data._property 的方式访问这些属性。
 
-59.怎么捕获Vue组件的错误信息？
+---
+## 怎么捕获Vue组件的错误信息？
 errorCaptured是组件内部钩子，当捕获一个来自子孙组件的错误时被调用，接收error、vm、info三个参数，return false后可以阻止错误继续向上抛出。
 
 errorHandler为全局钩子，使用Vue.config.errorHandler配置，接收参数与errorCaptured一致，2.6后可捕捉v-on与promise链的错误，可用于统一错误处理与错误兜底。
-————————————————
-版权声明：本文为CSDN博主「萌萌哒の瑞萌萌」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
-原文链接：https://blog.csdn.net/weixin_46232841/article/details/111332225
+
+---
+## 60.Vue.observable你有了解过吗？说说看
+让一个对象可响应。可以作为最小化的跨组件状态存储器。
+
+---
+## Vue项目中如何配置favicon？
+静态配置 `<link rel="icon" href="<%= BASE_URL %>favicon.ico">`, 其中`<%= BASE_URL %>`等同vue.config.js中publicPath的配置;
+动态配置 `<link rel="icon" type="image/png" href="">`
+``` javascript
+import browserImg from 'images/kong.png';//为favicon的默认图片
+const imgurl ='后端传回来的favicon.ico的线上地址'
+let link = document.querySelector('link[type="image/png"]');
+if (imgurl) {
+    link.setAttribute('href', imgurl);
+} else {
+    link.setAttribute('href', browserImg);
+}
+```
+
+---
+## 怎么修改Vue项目打包后生成文件路径？
+在Vue CLI2中修改config/index.js文件中的build.assetsPublicPath的值；
+在Vue CLI3中配置publicPath的值。
+
+---
+## 怎么解决Vue项目打包后静态资源图片失效的问题？
+在项目中一般通过配置alias路径别名的方式解决,下面是Vue CLI3的配置。
+``` javascript
+configureWebpack: {
+    resolve: {
+        extensions: ['.js', '.vue', '.json'],
+        alias: {
+            '@': resolve('src'),
+            'assets': resolve('src/assets'),
+            'css': resolve('src/assets/css'),
+            'images': resolve('src/assets/images'),
+        }
+    },
+},
+```
+---
+## 怎么解决Vue中动态设置img的src不生效的问题？
+因为动态添加src被当做静态资源处理了，没有进行编译，所以要加上require。
+``` javascript
+<template>
+    <img class="logo" :src="logo" alt="公司logo">
+</template>
+<script>
+export default {
+    data() {
+        return {
+            logo:require("assets/images/logo.png"),
+        };
+    }
+};
+</script>
+```
+---
+## 在Vue项目中如何引入第三方库（比如jQuery）？有哪些方法可以做到？
+先在主入口页面 index.html 中用 script 标签引入`< script src="./static/jquery-1.12.4.js"></ script>`,如果你的项目中有用ESLint检测，会报'$' is not defined，要在文件中加上/* eslint-disable */
+先在主入口页面 index.html 中用 script 标签引入`< script src="./static/jquery-1.12.4.js"></ script>`,然后在webpack 中配置一个 externals，即可在项目中使用。
+``` JavaScript
+externals: {
+    'jquery': 'jQuery'
+}
+```
+先在webpack中配置alias，最后在main.js中用import $ from 'jquery'，即可在项目中使用。
+``` JavaScript
+resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+        '@': resolve('src'),
+        'jquery': resolve('static/jquery-1.12.4.js')
+    }
+}
+```
+在webpack中新增一个plugins，即可在项目中使用
+``` javascript
+plugins: [
+         new webpack.ProvidePlugin({
+             $:"jquery",
+             jQuery:"jquery",
+             "windows.jQuery":"jquery"
+         })
+     ]
+```
+---
+## 说说你对SPA单页面的理解，它的优缺点分别是什么？
+是一种只需要将单个页面加载到服务器之中的web应用程序。当浏览器向服务器发出第一个请求时，服务器会返回一个index.html文件，它所需的js，css等会在显示时统一加载，部分页面按需加载。url地址变化时不会向服务器在请求页面，通过路由才实现页面切换。
+**优点**：
+良好的交互体验，用户不需要重新刷新页面，获取数据也是通过Ajax异步获取，页面显示流畅；
+良好的前后端工作分离模式。
+**缺点**：
+SEO难度较高，由于所有的内容都在一个页面中动态替换显示，所以在SEO上其有着天然的弱势。
+首屏加载过慢（初次加载耗时多）
+
+---
+## SPA单页面的实现方式有哪些？
+在hash模式中，在window上监听hashchange事件（地址栏中hash变化触发）驱动界面变化；
+在history模式中，在window上监听popstate事件（浏览器的前进或后退按钮的点击触发）驱动界面变化，监听a链接点击事件用history.pushState、history.replaceState方法驱动界面变化；
+直接在界面用显示隐藏事件驱动界面变化。
+
+---
+## 说说你对Object.defineProperty的理解
+Object.defineProperty(obj,prop,descriptor)方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象。
+
+obj：要在其上定义属性的对象。
+prop：要定义或修改的属性的名称。
+descriptor：将被定义或修改的属性描述符。
+descriptor属性描述符主要有两种形式：数据描述符和存取描述符。
+
+描述符必须是这两种形式之一；不能同时是两者。
+
+数据描述符和存取描述符共同拥有
+configurable：特性表示对象的属性是否可以被删除，以及除value和writable特性外的其他特性是否可以被修改。默认为false。
+enumerable：当该属性的enumerable为true时，该属性才可以在for…in循环和Object.keys()中被枚举。默认为false。
+数据描述符
+value：该属性对应的值。可以是任何有效的 JavaScript 值（数值，对象，函数等）。默认为undefined。
+writable：当且仅当该属性的writable为true时，value才能被赋值运算符改变。默认为false。
+存取描述符
+get：一个给属性提供 getter的方法，如果没有getter则为undefined。当访问该属性时，该方法会被执行，方法执行时没有参数传入，但是会传入this对象（由于继承关系，这里的this并不一定是定义该属性的对象）。默认为undefined。
+set：一个给属性提供 setter的方法，如果没有setter则为undefined。当属性值修改时，触发执行该方法。该方法将接受唯一参数，即该属性新的参数值。默认为undefined。
+定义descriptor时，最好先把这些属性都定义清楚，防止被继承和继承时出错。
+``` javascript
+function Archiver() {
+    var temperature = null;
+    var archive = [];
+    Object.defineProperty(this, 'temperature', {
+        get: function() {
+          console.log('get!');
+          return temperature;
+        },
+        set: function(value) {
+          temperature = value;
+          archive.push({ val: temperature });
+        }
+    });
+    this.getArchive = function() { return archive; };
+}
+var arc = new Archiver();
+arc.temperature; // 'get!'
+arc.temperature = 11;
+arc.temperature = 13;
+arc.getArchive(); // [{ val: 11 }, { val: 13 }]
+```
+
+---
+## 说说你对Proxy的理解
+官方定义：proxy对象用于定义基本操作的自定义行为（如属性查找，赋值，枚举，函数调用等）。
+通俗来说是在对目标对象的操作之前提供了拦截，对外界的操作进行过滤和修改某些操作的默认行为，可以不直接操作对象本身，而是通过操作对象的代理对象来间接来操作对象。
+`let proxy = new Proxy(target, handler)`
+target 是用 Proxy 包装的目标对象（可以是任何类型的对象，包括原生数组，函数，甚至另一个代理）;
+handler 一个对象，其属性是当执行一个操作时定义代理的行为的函数，也就是自定义的行为。
+handle可以为{}，但是不能为null，否则会报错
+
+Proxy 目前提供了 13 种可代理操作，比较常用的
+handler.get(target,property,receiver)获取值拦截
+handler.set(target,property,value,receiver)设置值拦截
+handler.has(target,prop)in 操作符拦截
+``` javascript
+let obj = {
+	a : 1,
+	b : 2
+}
+let test = new Proxy(obj,{
+    get : function (target,property) {
+        return property in target ? target[property] : 0
+    },
+    set : function (target,property,value) {
+        target[property] = 6;
+    },
+    has: function (target,prop){
+        if(prop == 'b'){
+            target[prop] = 6;
+        }
+        return prop in target;
+    },
+})
+
+console.log(test.a);        // 1
+console.log(test.c);        // 0
+
+test.a = 3;
+console.log(test.a)         // 6
+
+if('b' in test){
+    console.log(test)       // Proxy {a: 6, b: 6}
+}
+```
+---
+## Object.defineProperty和Proxy的区别
+- Object.defineProperty
+不能监听到数组length属性的变化；
+不能监听对象的添加；
+只能劫持对象的属性,因此我们需要对每个对象的每个属性进行遍历。
+
+- Proxy
+可以监听数组length属性的变化；
+可以监听对象的添加；
+可代理整个对象，不需要对对象进行遍历，极大提高性能；
+多达13种的拦截远超Object.defineProperty只有get和set两种拦截。
+
+---
+## Vue的模板语法用的是哪个web模板引擎的吗？说说你对这模板引擎的理解?
+采用的是Mustache的web模板引擎mustache.js
+``` html
+<script type="text/javascript" src="./mustache.js"></script>
+<script type="text/javascript">
+    var data = {
+        "company": "Apple",
+    }
+
+    var tpl = '<h1>Hello {{company}}</h1>';
+    var html = Mustache.render(tpl, data);
+
+    console.log(html);
+</script>
+```
+
+---
+## 你认为Vue的核心是什么？
+Vue.js 的核心是一个允许采用简洁的模板语法来声明式地将数据渲染进 DOM 的系统。
+
+---
+## 说说你对单向数据流和双向数据流的理解
+单向数据流是指数据只能从父级向子级传递数据，子级不能改变父级向子级传递的数据。
+双向数据流是指数据从父级向子级传递数据，子级可以通过一些手段改变父级向子级传递的数据。
+比如用v-model、.sync来实现双向数据流。
+
+---
+## 什么是虚拟DOM？
+虚拟DOM是将状态映射成视图的众多解决方案中的一种，其是通过状态生成一个虚拟节点树，然后使用虚拟节点树进行渲染生成真实DOM，在渲染之前，会使用新生成的虚拟节点树和上一次虚拟节点树进行对比，只渲染不同的部分。
+
+---
+## Vue中如何实现一个虚拟DOM？说说你的思路
+首先要构建一个VNode的类，DOM元素上的所有属性在VNode类实例化出来的对象上都存在对应的属性。例如tag表示一个元素节点的名称，text表示一个文本节点的文本，chlidren表示子节点等。将VNode类实例化出来的对象进行分类，例如注释节点、文本节点、元素节点、组件节点、函数式节点、克隆节点。
+
+然后通过编译将模板转成渲染函数render，执行渲染函数render，在其中创建不同类型的VNode类，最后整合就可以得到一个虚拟DOM（vnode）。
+
+最后通过patch将vnode和oldVnode进行比较后，生成真实DOM。
+
+---
+## Vue为什么要求组件模板只能有一个根元素？
+当前的virtualDOM差异和diff算法在很大程度上依赖于每个子组件总是只有一个根元素。
+
+---
+## axios是什么？怎样使用它？怎么解决跨域的问题？
+axios 是一个基于 promise 的 HTTP 库，先封装在使用。
+使用proxyTable配置解决跨域问题。
+比如你要调用http://172.16.13.205:9011/getList这个接口
+
+先在axios.create()配置baseURL增加标志
+``` javascript
+const service = axios.create({
+  baseURL: '/api',
+});
+
+service.get(getList, {params:data});
+```
+然后在config/index.js文件中配置
+``` javascript
+dev:{
+    proxyTable: {
+        '/api': {
+            target: 'http://172.16.13.205:9011', // 设置你调用的接口域名和端口号
+            secure: false,
+            changeOrigin: true,// 跨域
+            pathRewrite: {
+                '^/api': '' // 去掉标志
+            }
+        }
+    },
+}
+```
+配置后要重新npm run dev
+F12中看到请求是http://localhost:8080/api/getList，实际上请求是http://172.16.13.205:9011/getList。
+
+---
+## 如果想扩展某个现有的Vue组件时，怎么做呢？
+用mixins混入
+用extends，比mixins先触发
+用高阶组件HOC封装
+
+---
+## vue-loader是什么？它有什么作用？
+vue-loader是一个webpack的loader，是一个模块转换器，用于把模块原内容按照需求转换成新内容。
+它允许你以一种名为单文件组件 (SFCs)的格式撰写 Vue 组件。可以解析和转换 .vue 文件，提取出其中的逻辑代码 script、样式代码 style、以及 HTML 模版 template，再分别把它们交给对应的loader去处理。
+
+---
+## 你有使用过JSX吗？说说你对JSX的理解？
+JSX就是Javascript和XML结合的一种格式。React发明了JSX，利用HTML语法来创建虚拟DOM。当遇到<，JSX就当HTML解析，遇到{就当JavaScript解析。
