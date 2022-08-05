@@ -1,48 +1,172 @@
-function Promise(exector){
-  let _this = this;
-  //status表示一种状态
-  let status = "pending";
-  let value = undefined;
-  let reason = undefined;
+// https://juejin.cn/post/6850037281206566919
 
-  //成功
-  function resolve(value){
-      if(status == "pending"){
-          _this.value = value;
-          _this.status = "resolve";
+const PENDING = 'PENDING';
+const FULFILLED = 'FULFILLED';
+const REJECTED = 'REJECTED';
+
+class Promise {
+  constructor(executor) {
+    this.status = PENDING;
+    this.value = undefined;
+    this.reason = undefined;
+    // 存放成功的回调
+    this.onResolvedCallbacks = [];
+    // 存放失败的回调
+    this.onRejectedCallbacks= [];
+
+    let resolve = (value) => {
+      if(this.status ===  PENDING) {
+        this.status = FULFILLED;
+        this.value = value;
+        // 依次将对应的函数执行
+        this.onResolvedCallbacks.forEach(fn=>fn());
       }
+    } 
+
+    let reject = (reason) => {
+      if(this.status ===  PENDING) {
+        this.status = REJECTED;
+        this.reason = reason;
+        // 依次将对应的函数执行
+        this.onRejectedCallbacks.forEach(fn=>fn());
+      }
+    }
+
+    try {
+      executor(resolve,reject)
+    } catch (error) {
+      reject(error)
+    }
   }
 
-  //执行失败
-  function reject(value){
-      if(status == "pending"){
-          _this.value = value;
-          _this.status = "reject"     
-      }
-  }
+  then(onFulfilled, onRejected) {
+    if (this.status === FULFILLED) {
+      onFulfilled(this.value)
+    }
 
-  //异步操作
-  try{
-      exector(resolve,reject)
-  }catch(e){
-      reject(e)
+    if (this.status === REJECTED) {
+      onRejected(this.reason)
+    }
+
+    if (this.status === PENDING) {
+      // 如果promise的状态是 pending，需要将 onFulfilled 和 onRejected 函数存放起来，等待状态确定后，再依次将对应的函数执行
+      this.onResolvedCallbacks.push(() => {
+        onFulfilled(this.value)
+      });
+
+      // 如果promise的状态是 pending，需要将 onFulfilled 和 onRejected 函数存放起来，等待状态确定后，再依次将对应的函数执行
+      this.onRejectedCallbacks.push(()=> {
+        onRejected(this.reason);
+      })
+    }
   }
-  //测试then
-  Promise.prototype.then = function(reject,resolve){
-      let _this = this;
-      if(this.status == "resolve"){
-          reject(_this.value)
+}
+
+
+class MyPromise {
+    constructor(executor) {
+      this.state = 'pending'    // 初始化状态
+      this.value = null         // 初始化resolve的值
+      this.reason = null        // 初始化reject的结果
+      this.callbacks = []       // 定义回调
+    //   executor成功后处理方法
+      const resolve = value => {
+        if (this.state !== 'pending') return
+        this.state = 'fulfilled'
+        this.value = value
+        this.callbacks.forEach(callback => callback.fulfilled(value))
       }
-      if(this.status == "reject"){
-          resolve(_this.reason)
+    //   executor失败后处理方法
+      const reject = reason => {
+        if (this.state !== 'pending') return
+        this.state = 'rejected'
+        this.reason = reason
+        this.callbacks.forEach(callback => callback.rejected(reason))
       }
-  }}
-  //new Promise测试
-let promise = new Promise((reject,resolve)=>{
-  resolve("return resolve");
-});
-promise.then(data=>{
-  console.log(`success${data}`);},
-  err=>{
-  console.log(`err${data}`);
-})
+      try {
+        executor(resolve, reject)
+      } catch (error) {
+        reject(error)
+      }
+    }
+    // 定义then方法
+    then(onFulfilled, onRejected) {
+        // 如果onFulfilled或onRejected不是函数时，就忽略他们，直接赋值（来自Promise/A+ 2.2规定）
+      if(typeof onFulfilled !== 'function') onFulfilled = value => value
+      if(typeof onRejected !== 'function') onRejected = reason => { throw reason }
+
+      let promise = new MyPromise((resolve, reject) => {
+        if (this.state === 'fulfilled') {
+          setTimeout(() => {
+            try {
+              this.resolvePromise(promise, onFulfilled(this.value), resolve, reject)
+            } catch (error) {
+              reject(error)
+            }
+          });
+        }
+        if (this.state === 'rejected') {
+          setTimeout(() => {
+            try {
+              this.resolvePromise(promise, onRejected(this.reason), resolve, reject)
+            } catch (error) {
+              reject(error)
+            }
+          })
+        }
+        if (this.state === 'pending') {
+          this.callbacks.push({
+            fulfilled: () => {
+              setTimeout(() => {
+                try {
+                  this.resolvePromise(promise, onFulfilled(this.value), resolve, reject)
+                } catch (error) {
+                  reject(error)
+                }
+              })
+            },
+            rejected: () => {
+              setTimeout(() => {
+                try {
+                  this.resolvePromise(promise, onRejected(this.reason), resolve, reject)
+                } catch (error) {
+                  reject(error)
+                }
+              })
+            }
+          })
+        }
+      })
+      return promise
+    }
+    resolvePromise(promise, result, resolve, reject) {
+      if (promise === result) reject(new TypeError('Chaining cycle detected for promise'))
+      if (result && typeof result === 'object' || typeof result === 'function') {
+        let called
+        try {
+          let then = result.then
+          if (typeof then === 'function') {
+            then.call(result, value => {
+              if (called) return
+              called = true
+              this.resolvePromise(promise, value, resolve, reject)
+            }, reason => {
+              if (called) return
+              called = true
+              reject(reason)
+            })
+          } else {
+            if (called) return
+            called = true
+            resolve(result)
+          }
+        } catch (error) {
+          if (called) return
+          called = true
+          reject(error)
+        }
+      } else {
+        resolve(result)
+      }
+    }
+  }

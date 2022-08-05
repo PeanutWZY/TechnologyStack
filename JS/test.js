@@ -1,4 +1,3 @@
-const arr = [1, 22, 3, 44, 5, 66, 7, 88, 9];
-const max = Math.max.apply(Math, arr);
-console.log(max);
-console.log(Math.max(1, 22, 3, 44, 5, 66, 7, 88, 9));
+const list = new Set([2,3,4,4,3])
+list.add(1)
+console.log(list)
