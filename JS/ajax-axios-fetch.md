@@ -60,7 +60,7 @@ function load(){
       xmlhttp= newActiveXObject("Microsoft.XMLHTTP");
    } 
    xmlhttp.onreadystatechange= function(){
-      if (xmlhttp.readyState ==4 && xmlhttp.status == 200) {//获得了请求数据
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {//获得了请求数据
          var expertinfolist = xmlhttp.responseText;
          //发送请求数据到myDiv     document.getElementById("myDiv").innerHTML=expertinfolist;              
       }
@@ -88,6 +88,8 @@ $.ajax({
    3. 使用open方法与服务器建立连接
    4. 向服务器发送数据
    5. 在回调函数中针对不同的响应状态进行处理
+
+[手写ajax](https://zhuanlan.zhihu.com/p/27776535)
 
 ---
 ## axios
