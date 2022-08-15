@@ -15,7 +15,7 @@
 vue.js是采用数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty()来劫持各个属性的setter和getter，在数据变动时发布消息给订阅者，触发相应的监听回调
 Vue是一个典型的MVVM框架，模型（Model）只是普通的javascript对象，修改它则视图（View）会自动更新。这种设计让状态管理变得非常简单而直观
 
-- Observer（数据监听器） : Observer的核心是通过Object.defineProprtty()来监听数据的变动，这个函数内部可以定义setter和getter，每当数据发生变化，就会触发setter。这时候Observer就要通知订阅者，订阅者就是Watcher
+- Observer（数据监听器） : Observer的核心是通过Object.defineProperty()来监听数据的变动，这个函数内部可以定义setter和getter，每当数据发生变化，就会触发setter。这时候Observer就要通知订阅者，订阅者就是Watcher
 
 - Watcher（订阅者） : Watcher订阅者作为Observer和Compile之间通信的桥梁，主要做的事情是：
    - 在自身实例化时往属性订阅器(dep)里面添加自己
@@ -27,7 +27,6 @@ Vue是一个典型的MVVM框架，模型（Model）只是普通的javascript对�
 - MVVM 作为数据绑定的入口，整合 Observer、Compile 和 Watcher 三者，通过 Observer 来监听自己的 model 数据变化，通过 Compile 来解析编译模板指令，最终利用 Watcher 搭起 Observer 和 Compile 之间的通信桥梁，达到数据变化 -> 视图更新；视图交互变化 (input) -> 数据 model 变更的双向绑定效果。
 
 ---
-
 ## vue2和vue3响应式数据的理解/双向数据绑定的原理
 - 响应式数据的核心是数据变化能够被实时监控
 - 对象在vue2中采用了defineProperty（Vue.util.defineReactive）将数据定义成了响应式的数据（拦截所有属性增加了getter和setter）缺陷是需要递归遍历，不存在的属性无法被监控到。vue2里采用重写数组的方法来实现（7个变异方法，能改变原数组的方法）通过原型链 + 函数劫持的方法实现的（缺陷是不能检测到索引更改和数组长度的更改）
@@ -37,7 +36,6 @@ Vue是一个典型的MVVM框架，模型（Model）只是普通的javascript对�
 - 尽量缓存使用过的变量
 
 ---
-
 ## Proxy与defineProperty
 - **defineProterty** 的局限性在于只能对针对单例属性进行监听，它对data中的属性做了遍历+递归，为每个属性设置getter，setter。对于深层属性嵌套的对象，要劫持它内部深层次的变化，就需要递归遍历这个对象，执行object.defineProperty把每一层对象数据都变成响应时的，会产生很大的性能消耗
 - **Proxy** 是针对一个对象的监听，对该对象的所有操作都会进入监听操作，因此可以代理所有属性，proxy在目标对象前设置了一层拦截，可以对外界的访问进行过滤和改写。proxy是在getter中递归响应式，这样只有真正访问到内部属性才会变成响应式。
@@ -62,7 +60,7 @@ vue的数据双向绑定 将MVVM作为数据绑定的入口，整合Observer，C
             return obj
         },
         set: function (newValue) {
-            document.getElementById('txt').value = newValue
+            // document.getElementById('txt').value = newValue
             document.getElementById('show').innerHTML = newValue
         }
     })
@@ -99,7 +97,10 @@ vue的数据双向绑定 将MVVM作为数据绑定的入口，整合Observer，C
 - **目的**：当数据变化时就可以更新视图
 - **方式**：每一个属性都有一个dep属性，每一个对象也有一个dep属性，每个组件在渲染的过程中都会创建一个渲染watcher（三种watcher，渲染watcher，计算属性watcher，用户watcher），一个属性可能会有多个watcher
 - **过程**：当调用取值方法的时候如果有watcher就会将watcher收集起来，数据变化后会通知自身对应的dep出发更新调用watcher.updata方法
-  
+每一个属性和对象都有一个dep，存放watcher，当属性改变时会通知其对应的watcher去更新数据
+默认在渲染的时候（获取到这个响应式数据），此时会触发属性收集依赖dep.depend()
+当属性发生改变时则会触发watcher，通过dep.notify()通知渲染watcher重新渲染页面watcher.update
+
 ---
 
 ## Vue和React的不同，应用场景分别是什么
@@ -201,7 +202,6 @@ el的优先级是高于$mount的，因此以el挂载节点为准*/
 4、Object.freeze()
 
 ---
-
 ## 如何将获取data中某一个数据的初始状态？
 ``` javascript
 data() {
@@ -531,11 +531,11 @@ key是每一个节点的唯一标识
 
 ---
 
-## diff 算法
+## [diff 算法](https://blog.csdn.net/m0_64023259/article/details/125476986)
 Diff算法的作用:比较新旧节点,找到可复用的节点,比对进行增删移的操作,节省性能。
 
 - 简单Diff算法:
-  实现:通过虚拟节点的key属性找到可复用的节点,找到了就记录该索引,设为最大索引,通过DOM移动后续小于该索引的节点。类似冒泡排序。        
+  实现:通过虚拟节点的key属性找到可复用的节点,找到了就记录该索引,设为最大索引,通过DOM移动后续小于该索引的节点。类似冒泡排序。
 
 - 双端Diff算法:
   实现:标记新旧两组节点的各自首尾节点,将其标记为新头,新尾,旧头,旧尾,与相对的首尾节点互相比较(例如新头和旧头旧尾比对,旧尾和新头新尾比对),都没找到相同的节点就将新头与旧头旧尾之间的节点进行比对,例如旧三和新头一样,那么就把旧三移到顶部,然后旧三和新头不参与后续比对,将新二设为新头,继续与相对的首尾节点互相比较,如果发现了相同节点,就根据key属性将旧节点移动到新节点对应的位置,然后以此类推。
@@ -806,7 +806,7 @@ watch 对象合并时，相同的 key 合成一个对象，且混入监听在组
 ---
 
 ## vue自定义组件添加事件
-使用修饰符.native 监听组件根元素的原生事件
+使用修饰符.native 监听组件根元素的原生事件,把子组件当做原生html标签
 ``` HTML
 <my-button  @click.native="alert()" names="点击触发"></my-button>
 ```
@@ -1118,7 +1118,7 @@ seo：搜索引擎优先爬取页面HTML结构，使用ssr时，服务端已经�
 
 ---
 ## scoped 样式隔离
-vue在创建组件的时候，会给组件生成唯一的id值，当style标签给scoped属性是，会给组件的html结点都加上这个id值标识，入data-v4d5aa038，然后样式表会根据这个id值标识去匹配样式，从而实现样式隔离
+vue在创建组件的时候，会给组件生成唯一的id值，当style标签给scoped属性是，会给组件的html结点都加上这个id值标识，如data-v4d5aa038，然后样式表会根据这个id值标识去匹配样式，从而实现样式隔离
 
 ---
 ## 函数式组件使用场景和原理
@@ -1129,7 +1129,7 @@ vue在创建组件的时候，会给组件生成唯一的id值，当style标签�
 函数式组件不需要实例化，无状态，没有生命周期，所以渲染性能要好于普通组件。函数式组件结构更简单，代码结构更清晰
 
 ***函数式组件与普通组件的区别?***
-- 函数式组件需要在声明组件是指定functional。
+- 函数式组件需要在声明组件时指定functional。
 - 函数式组件不需要实例化，所以没有this，this通过render函数的第二个参数来代替。
 - 函数式组件没有生命周期钩子函数，不能使用计算属性，watch等等。
 - 函数式组件不能通过$emit对外暴露事件，调用事件只能通过context.listeners.click的方式调用外部传入的事件。
