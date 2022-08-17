@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<!-- 圣杯 -->
+<style>
+* {
+    color: #fff;
+}
+header {
+    background-color: blue;
+}
+.main {
+    background-color: orange;
+    padding: 0 100px; /* 左右两边的padding来放置left和right区域 */
+}
+.left,.center,.right {
+    float: left;
+}
+.center {
+    background-color: purple;
+    width: 100%; /* 这会把left和right挤到下一行 */
+}
+.left {
+    background-color: red;
+    width: 100px;
+    margin-left: -100%; /* 把left移动到和center同一行并且左边对齐 */
+    position: relative;
+    left: -100px; /* 再向左移动到main的padding区域,就不会挡住center了 */
+}
+.right {
+    background-color: grey;
+    width: 100px;
+    margin-left: -100px; /* 把left移动到和center同一行并且右边对齐 */
+    position: relative;
+    left: 100px; /* 向右移动到右边的padding区域*/
+}
+footer {
+    background-color: pink;
+}
+/* 清除浮动 */
+.clear-fix::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+</style>
+
+<!-- 双飞翼布局 -->
+<!-- <style>
+.first,.second,.third {
+    float: left;
+}
+/* 用这个div把主内容包起来之后,主内容就可使用margin空出两边的区域了 */
+.first {
+    width: 100%;
+    background-color: purple;
+}
+.content {
+    margin: 0 100px;
+}
+.second {
+    width: 100px;
+    background-color: red;
+    margin-left: -100%; /* 作用和圣杯一样 */
+}
+.third {
+    width: 100px;
+    background-color: grey;
+    margin-left: -100px; /* 作用和圣杯一样 */
+}
+.footer {
+    background-color: pink;
+    clear: both; /* 清除footer上面元素的浮动 */
+}
+</style> -->
+
+<!-- flex 布局 -->
+<!-- <style>
+* {
+    color: #fff;
+}
+header {
+    background-color: blue;
+}
+.flex-box {
+    display: flex;
+}
+.flex-center {
+    background-color: purple;
+    flex-grow: 1;
+}
+.flex-left {
+    background-color: red;
+    order: -1;
+    flex: 0 0 100px;
+}
+.flex-right {
+    background-color: green;
+    flex: 0 0 100px;
+}
+footer {
+    background-color: pink;
+}
+</style> -->
+
+<body>
+  <header>header</header>
+  <div class="main clear-fix">
+      <div class="center">玩亚索</div>
+      <div class="left">睡觉</div>
+      <div class="right">吃饭</div>
+  </div>
+  <div class="bottom">bottom</div>
+</body>
+</html>

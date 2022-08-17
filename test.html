@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 父盒子 */
+  .contain {
+    /* 1.将盒子整体向右移动 200px */
+    /* 使用定位也可以 */
+    /* position: relative;
+     left: 200px;
+     top: 0; */
+    margin-left: 200px;
+  }
+
+  /* 左侧固定盒子 */
+  .aside {
+   float: left;
+    /* 2.     把左侧的子盒子像左移动 200px
+     形成左右对齐的布局
+     */
+    /* 使用绝对定位会脱离文档流不要使用 */
+    position: relative;
+    left: -200px;
+    top: 0;
+    /* 把此盒子放到最左侧去形成左右布局 */
+    margin-left: -100%;
+    width: 200px;
+    background-color: pink;
+  }
+  /* 右侧自适应盒子 */
+  .main {
+    float: left;
+    width: 100%;
+    min-height: 200px;
+    background-color: skyblue;
+  }
+</style>
+<body>
+  <div class="contain">
+    <div class="main">这是右侧的内容</div>
+    <div class="aside">这是左侧的广告</div>
+  </div>
+</body>
+</html>
