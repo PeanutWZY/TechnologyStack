@@ -55,9 +55,9 @@
 function load(){
    var xmlhttp;
    if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera,Safari
-      xmlhttp= newXMLHttpRequest();
+      xmlhttp= new XMLHttpRequest();
    }else{// code for IE6, IE5
-      xmlhttp= newActiveXObject("Microsoft.XMLHTTP");
+      xmlhttp= new ActiveXObject("Microsoft.XMLHTTP");
    } 
    xmlhttp.onreadystatechange= function(){
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {//获得了请求数据
@@ -66,7 +66,7 @@ function load(){
       }
    }
    var url="expert_ZFTservlet?expert_name="+"曾攀";
-   xmlhttp.open("GET", url,true);
+   xmlhttp.open("GET", url, true);
    xmlhttp.send();
 }
 </script>

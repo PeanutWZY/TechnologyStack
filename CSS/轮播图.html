@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewpoint" content="width=device-width,initial-scale=1.0">
+        <title>Carousel</title>
+    </head>
+    <style>
+      body {
+          margin: 0px;
+      }
+      .carousel {
+          width: 100vw;
+          overflow: hidden;
+      }
+      .carousel-item {
+          float: left;
+          width: 100vw;
+          height: 100vh;
+      }
+    </style>
+        <body style="margin: 0px;">
+        <!-- 展示轮播图的窗口 -->
+        <div class="carousel">
+            <!-- 存放轮播图内容的容器 -->
+            <div class="carousel-inner">
+                <!-- 每条轮播图 -->
+                <div class="carousel-item" style="background-color: aqua;"></div>
+                <div class="carousel-item" style="background-color: goldenrod;"></div>
+                <div class="carousel-item" style="background-color: mediumseagreen;"></div>
+                <div class="carousel-item" style="background-color: coral;"></div>
+            </div>
+        </div>
+    </body>
+    <script>
+      // 获取所有轮播图
+      let carouselItem = document.getElementsByClassName("carousel-item");
+      // 取得宽度
+      let width = carouselItem[0].clientWidth;
+      let lenth = carouselItem.length;
+      // 设置存放轮播图内容的容器的宽度
+      let carouselInner = document.getElementsByClassName("carousel-inner");
+      carouselInner[0].style.width = `${width * lenth}px`;
+      let i = 0;
+      // 设置按一定时间重复
+      setInterval(() => {
+          // 获取当前轮播图的元素位置
+          let current = i % lenth;
+          // 获取下一个轮播图的位置，取余防止超出范围
+          let next = (i + 1) % lenth;
+          // 让当前的轮播图向左移出屏幕
+          carouselItem[current].style.transition = "transform .8s";
+          carouselItem[current].style.transform = `translateX(${0 - (current + 1) * width}px)`;
+          // 让下一个轮播图向左进入屏幕
+          carouselItem[next].style.transition = "transform .8s";
+          carouselItem[next].style.transform = `translateX(${0 - ((current + 1) % lenth) * width}px)`;
+          i++;
+          // 移动结束后，设置下一张轮播图位置，准备下一次移动
+          setTimeout(() => {
+              carouselItem[current].style.transition = "";
+              carouselItem[next].style.transition = "";
+              // 轮询每个元素
+              for(let j = 0; j < lenth; j++){
+                  // 当前元素不变
+                  if(j == i % lenth) continue;
+                  if(j < i % lenth) {
+                      // 当前元素左边的元素按顺序移动放置到列表的后面做进入准备
+                      carouselItem[j].style.transform = `translateX(${(lenth - j - i % lenth) * width}px)`;
+                  } else {
+                      // 当前元素右边的元素移动到当前元素的后面，防止轮播图切换时中间有留白
+                      carouselItem[j].style.transform = `translateX(${0 - ((current + 1) % lenth) * width}px)`;
+                  }
+              }
+              i %= lenth;
+          }, 800)
+      }, 2000)
+    </script>
+</html>
