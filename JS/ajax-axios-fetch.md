@@ -92,6 +92,17 @@ $.ajax({
 [手写ajax](https://zhuanlan.zhihu.com/p/27776535)
 
 ---
+
+## [一个 XMLHttpRequest 实例有多少种状态？](https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest/readyState)
+|值|状态|描述|
+|---|---|---|
+|0|UNSENT|代理被创建，但尚未调用 open() 方法。|
+|1|OPENED|open() 方法已经被调用。|
+|2|HEADERS_RECEIVED|send() 方法已经被调用，并且头部和状态已经可获得。|
+|3|LOADING|下载中；responseText 属性已经包含部分数据。|
+|4|DONE|下载操作已完成。|
+
+---
 ## axios
 axios是通过Promise实现对ajax技术的一种封装，就像jquery对ajax的封装一样。
 从浏览器中创建 XMLHttpRequest
