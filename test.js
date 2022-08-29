@@ -1,5 +1,7 @@
-const arr = [1,2,3]
-const str = 5
-console.log(arr.indexOf(2))
+function func(x){
+  console.log(typeof x, arguments.length);
+  }
 
-set
+func(); //==> "undefined", 0
+func(7); //==> "number", 1
+func(1, 2, 3); //==> "string", 3
