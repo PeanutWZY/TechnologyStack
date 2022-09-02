@@ -243,7 +243,7 @@ function whatBrowser() {
 
 ---
 
-## 深拷贝和浅拷贝
+## [深拷贝和浅拷贝](https://juejin.cn/post/6844903929705136141)
 1. 基本数据类型的赋值不算拷贝
 2. 数组和对象的赋值为浅拷贝
 3. 解构赋值时，针对一维数组和对象可以看作深拷贝，多维数组为浅拷贝
@@ -513,34 +513,10 @@ func("1", 2, 3); //==> "string", 3
 
 ---
 
-## 列出一些内置方法及其返回的值。
-| 内置方法	| 返回值 |
-| ---- | ----|
-| CharAt()	| 它返回指定索引处的字符。|
-| Concat()	| 它连接两个或多个字符串。|
-| forEach()	| 它为数组中的每个元素调用一个函数。|
-| indexOf()	| 它返回指定值第一次出现时调用字符串对象中的索引。|
-| pop()	| 它从数组中删除最后一个元素并返回该元素。|
-| push()	| 它将一个或多个元素添加到数组的末尾，并返回数组的新长度。|
-| reverse()	| 反转数组元素的顺序。|
-
----
-
 ## JS中的变量命名约定是什么？
 不应该使用任何JS保留关键字作为变量名。例如，break或boolean变量名无效。
 JS 变量名不应该以数字(0-9)开头。它们必须以字母或下划线开头。
 JS 变量名区分大小写。例如，Test和test是两个不同的变量。
-
----
-
-## cookie
-**创建cookie**：
-最简单方法是为document.cookie对象分配一个字符串值，如下所示:
-document.cookie = "key1 = value1; key2 = value2; expires = date";
-**读取cookie**：
-document.cookie的值是由分号分隔的name=value对的列表，其中name是cookie的名称，value是其字符串值。
-可以使用split()方法将字符串分解为键和值。
-**删除cookie**：以便后续尝试读取cookie，则只需将过期日期设置为过去的时间。 咱们应该定义cookie路径以确保删除正确的cookie。 如果未指定路径，某些浏览器将不允许咱们删除cookie。
 
 ---
 
@@ -1220,37 +1196,7 @@ var nextListItem = function() {
   }
 };
 ```
----
 
-## 数组方法
-join()：数组转为字符串，可带中间符号
-push()：数组尾部添加内容，返回新长度
-pop()：数组尾部删除一条内容，返回长度
-unshift()：数组头部添加内容，返回新长度
-shift()：数组头部删除一条内容，返回删除内容
-sort()：数组内容从大到小排序
-reverse()：反转数组内容项
-concat()：拼接数组，若无内容复制数组内容
-slice()：截取数组，从指定下标开始
-splice()：删除、插入、替换；
-删除：2 个参数：要删除的第一项的位置和要删除的项数。
-插入：3 个参数：起始位置、 0（要删除的项数）和要插入的项。
-替换：3 个参数：起始位置、要删除的项数和要插入的任意数量的项。
-
----
-
-## 字符串方法
-charAt()：根据下标找到对应值
-charCodeAt()：通过下标值找到对应字符Unicode编码
-indexOf()：通过字符查找对应下标（首次出现）
-lastIndexOf()：通过字符找最后一次出现的下标值
-slice()：截取字符串，2个参数，（起始位置，结束位置）
-split()：把字符串按分隔符分割成数组
-substring()：截取字符串，（起始位置，结束位置）
-substr()：截取指定位置和长度的字符串，（起始位置，长度）
-toLowerCase()：字符串转为小写
-toUpperCase()：字符串转成大写
-trim()：去掉字符串前后所有空格
 
 ---
 
@@ -1272,25 +1218,6 @@ return false;
 **局部变量**：声明在函数内部的变量，局部作用域一般只在固定的代码片段内可访问到，最常见的例如函数内部，所有在一些地方也会看到有人把这种作用域称为函数作用域。
 
 ---
-
-## 继承的几种方式
-构造函数继承：在Child里面,把Parent的this指向改为是Child的this指向,从而实现继承
-缺点:只能解决属性的继承,使用属性的值不重复,但是父级类别的方法不能继承
-原型链继承：把Child的原型改为是Parent的实例,从而实现继承
-缺点:因为Child的原型对象都是New Parent,所以实例化出来的对象的属性都是一样的,而且Parent上面的引用类型只要有一个实例对象修改了,其他也会跟着修改.因为他们原型对象都是共用的
-组合方式继承（组合前两种）：
-缺点:父类的原型对象调用了两次,没有必要,而且student实例的构造函数是来自于Person
-还有两种组合式继承优化
-
----
-
-## 函数创建的方式
-函数声明：
-function Fn(){}
-字面量/函数表达式：
-var m = function(){}
-构造函数：
-var sum =new Function(“n1”,”n2”,”return n1+n2”)
 
 ## 如何解决异步回调地狱
 1. promise
@@ -1382,7 +1309,6 @@ js怎么异步：浏览器只分配给js一个主线程，用来执行任务（�
 所以，浏览器为这些耗时任务开辟了另外的线程，主要包括http请求线程，浏览器定时触发器，浏览器事件触发线程，这些任务是异步的。这些异步任务完成后通过回调函数让主线程知道。
 
 ---
-
 ## EventLoop 事件循环
 JS是单线程的，为了防止一个函数执行时间过长阻塞后面的代码，所以会先将同步代码压入执行栈中，依次执行，将异步代码推入异步队列，异步队列又分为宏任务队列和微任务队列，因为宏任务队列的执行时间较长，所以微任务队列要优先于宏任务队列。微任务队列的代表就是，Promise.then，MutationObserver，宏任务的话就是setImmediate setTimeout setInterval
 JS运行的环境。一般为浏览器或者Node。 在浏览器环境中，有JS 引擎线程和渲染线程，且两个线程互斥。 Node环境中，只有JS 线程。 不同环境执行机制有差异，不同任务进入不同Event Queue队列。 当主程结束，先执行准备好微任务，然后再执行准备好的宏任务，一个轮询结束。
@@ -1401,7 +1327,7 @@ eventLoop 是由JS的宿主环境（浏览器）来实现的；
 浏览器中的任务源(task):
 宏任务(macrotask)：
 宿主环境提供的，比如浏览器
-ajax、setTimeout、setInterval、setTmmediate(只兼容ie)、script、requestAnimationFrame、messageChannel、UI渲染、一些浏览器api
+ajax、setTimeout、setInterval、setImmediate(只兼容ie)、script、requestAnimationFrame、messageChannel、UI渲染、一些浏览器api
 微任务(microtask)：
 语言本身提供的，比如promise.then
 then、queueMicrotask(基于then)、mutationObserver(浏览器提供)、messageChannel 、mutationObersve
@@ -1414,13 +1340,11 @@ then、queueMicrotask(基于then)、mutationObserver(浏览器提供)、messageC
 数据描述方面：json对数据的描述性比xml较差
 xml和json都用在项目交互下，xml多用于做配置文件，json用于数据交互。
 
-## Object是引用类型嘛？引用类型和基本类型有什么区别？哪个是存在堆哪一个是存在栈上面的？
-引用类型的数据内容存放在堆中，引用地址存放在栈中，基本数据类型存放在栈中
-
-
+---
 ## JS常见的dom操作api
 [常用DOM操作API](https://juejin.cn/post/6844903604445249543)
 
+---
 ## 解释一下事件冒泡和事件捕获
  element.addEventListener(event, function, useCapture)
  | 参数 | 描述 |
@@ -1430,16 +1354,18 @@ xml和json都用在项目交互下，xml多用于做配置文件，json用于数
  | useCapture | 可能值:true - 事件句柄在捕获阶段执行（即在事件捕获阶段调用处理函数）false- 默认。事件句柄在冒泡阶段执行（即表示在事件冒泡的阶段调用事件处理函数） |
 [事件冒泡、事件捕获、事件委托](https://juejin.cn/post/6844903834075021326)
 
+---
 ## 对闭包的理解？什么时候构成闭包？闭包的实现方法？闭包的优缺点？
-**描述**：声明一个变量，声明一个函数，在函数内部访问外部的变量，这个函数加这个变量所包含的环境就是闭包。
-**实现方法**：在一个函数内声明变量和另一个函数，然后将这个函数作为返回值，就形成了闭包。
+**描述**：当一个函数的返回值是另外一个函数,而返回的那个函数如果调用了其父函数内部的变量,且返回的这个函数在外部被执行，就产生了闭包。闭包是一个环境，能够读取其他函数内部的变量。
 **作用**：从外部读取内部的变量（由于作用域，正常情况是无法读取内部的局部变量的），将创建的变量值始终保持在内存中。
 **优点**： 可以避免全局变量的污染，将变量私有化。
 **缺点**： 1.由于闭包会使得函数中的变量都被保存在内存中，内存消耗很大，所以不能滥用闭包，否则会造成网页的性能问题，在IE中可能导致内存泄露。解决方法是，在退出函数之前，将不使用的局部变量全部删除。2.闭包会在父函数外部，改变父函数内部变量的值。所以，如果你把父函数当作对象（object）使用，把闭包当作它的公用方法（Public Method），把内部变量当作它的私有属性（private value），这时一定要小心，不要随便改变父函数内部变量的值。
 
-## js的垃圾回收机制
+---
+## [js的垃圾回收机制与内存泄漏](https://www.51cto.com/article/683431.html)
+### 垃圾回收机制
 - **原理**：找到不再继续使用的变量，释放其内存。垃圾回收器会按照固定的时间间隔(或代码中预定的收集时间)，周期性地执行回收;
-- 全部变量的声明周期会一直持续，直到页面卸载。而局部变量声明在函数中，它的声明周期从执行函数开始，直到函数执行结束。在这个过程中，局部变量会在堆或栈上被分配相应的空间以存储它们的值，函数执行结束，这些局部变量也不再被使用，所占用的空间也就被释放;
+- 全局变量的声明周期会一直持续，直到页面卸载。而局部变量声明在函数中，它的声明周期从执行函数开始，直到函数执行结束。在这个过程中，局部变量会在堆或栈上被分配相应的空间以存储它们的值，函数执行结束，这些局部变量也不再被使用，所占用的空间也就被释放;
 - **回收方式**：垃圾回收的两种实现方式：**标记清除**、**引用计数**
 
 **标记清除（主流浏览器）**
@@ -1455,7 +1381,7 @@ xml和json都用在项目交互下，xml多用于做配置文件，json用于数
 
 IE9以下还在使用引用计数，当对象循环引用时，引用次数无法标记为0，就会导致无法被回收。其他浏览器废弃使用;
 
-## 内存泄漏的原因和场景
+### 内存泄漏的场景和原因
 1. 未声明的全局变量
 js对未声明变量会在全局最高对象上创建它的引用，(是以属性存在的，而不是变量)，如果在游览器上就是window对象，如果在node环境下就是global;如果未声明的变量缓存大量的数据，它可能只有在页面被刷新或者被关闭的时候才会释放内存，这样就造成了内存意外泄漏;
 
@@ -1467,48 +1393,131 @@ js对未声明变量会在全局最高对象上创建它的引用，(是以属�
 浏览器中DOM和js采用的是不一样的引擎，DOM采用的是渲染引擎，而js采用的是v8引擎，所以在用js操作DOM时会比较耗费性能，因为他们需要桥来链接他们。为了减少DOM的操作，我们一般将常用的DOM;
 我们会采用变量引用的方式会将其缓存在当前环境。如果在进行一些删除、更新操作之后，可能会忘记释放已经缓存的DOM;
 
-[垃圾回收机制和内存泄漏](https://www.51cto.com/article/683431.html)
+---
+## [this有哪些使用场景？跟C,Java中的this有什么区别？如何改变this的值？](https://www.jb51.net/article/180383.htm)
+1. 普通函数的调用，this指向的是window
+2. 对象方法的调用，this指的是该对象，且是最近的对象
+3. 构造函数的调用，this指的是实例化的新对象
+4. apply和call调用，this指向参数中的对象
+5. 匿名函数的调用，this指向的是全局对象window
+6. 定时器中的调用，this指向的是全局变量window
 
-## this有哪些使用场景？跟C,Java中的this有什么区别？如何改变this的值？
-[this存在场景]()
+---
+## [显示原型和隐式原型，手绘原型链，原型链是什么？为什么要有原型链](https://blog.csdn.net/weixin_40387601/article/details/80327955)
+### 原型
+是什么：在JavaScript中原型是一个prototype对象，用于表示类型之间的关系。
 
-## call，apply，bind
-改变函数内部this的指向。call和apply的用法类似，接收的第一个参数是对象，call需要将其余参数按循序传入，apply需要将其余参数按照数组形式传入。bind接收对象作为参数返回一个新函数。
+显式原型：`prototype`            
+隐式原型：`__proto__`
+1. 每个函数function都有一个prototype，即显式原型(属性)
+2. 每个实例对象都有一个__proto__，可称为隐式原型(属性)
+3. 对象的隐式原型的值为其对应构造函数的显式原型的值
+4. 总结:
+  * 函数的prototype属性: 在定义函数时自动添加的, 默认值是一个空Object对象
+  * 对象的__proto__属性: 创建对象时自动添加的, 默认值为构造函数的prototype属性值
+  *Object.prototype的__proto__属性指向null。
 
-## 显示原型和隐式原型，手绘原型链，原型链是什么？为什么要有原型链
-[原型与原型链](https://blog.csdn.net/weixin_40387601/article/details/80327955)
+**区别**：
+__proto__是每个对象都有的一个属性，而prototype是函数才会有（函数也有__proto__）的属性。
+__proto__指向的是当前对象的原型对象，而prototype指向它的构造函数的原型对象。
 
-## 创建对象的多种方式
-Object.create()
-{}
-new Object
-function(){
+**作用**：
+1、肯定是为了继承！
+2、prototype用来实现基于原型的继承与属性的共享。
+3、__proto__就构成了我们常说的原型链 访问构造方法中的显示原型，同样用于实现基于原型的继承。
 
-}
-class
-[创建对象的多种方式](https://www.cnblogs.com/shirliey/p/11696412.html)
+### 原型链
+是什么：JavaScript万物都是对象，对象和对象之间也有关系，并不是孤立存在的。对象之间的继承关系，在JavaScript中是通过prototype对象指向父类对象，直到指向Object对象为止，这样就形成了一个原型指向的链条，专业术语称之为原型链。
 
-## 实现继承的多种方式和优缺点
-[js六种继承方式](https://blog.csdn.net/qq_44162474/article/details/98489229)
+原型链就是创建一个构造函数，它会默认生成一个prototype属性并指向原型对象。使用下一个构造函数的原型对象作为这个构造函数的实例。即 nextFuction.prototype = new thisFuction(); 
 
+在下下一个构造函数的原型对象 = new nextFuction。这样下去就会构成一条实例与原型之间的链条，这就是原型链。
+
+![手绘原型链](https://img-blog.csdn.net/2018051619312092?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDM4NzYwMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+---
+## [创建对象的多种方式](https://www.cnblogs.com/shirliey/p/11696412.html)
+1. new + Object
+2. {} 字面式创建
+3. 工厂模式：用函数包装一个new 对象，并返回这个新对象
+工厂模式解决了重复实例化多个对象的问题，但没有解决对象识别的问题（工厂模式无从识别对象的类型，因为全部都是Object，不像Date、Array等，本例中，得到的都是o对象，对象的类型都是Object，因此出现了构造函数模式）。
+4. 构造函数模式：构造函数也有其缺陷，每个实例都包含不同的Function实例（ 构造函数内的方法在做同一件事，但是实例化后却产生了不同的对象，方法是函数 ，函数也是对象）
+5. 原型模式：原型模式的好处是所有对象实例共享它的属性和方法（即所谓的共有属性），此外还可以如代码第16,17行那样设置实例自己的属性（方法）（即所谓的私有属性），可以覆盖原型对象上的同名属性（方法）。
+6. 混合模式
+构造函数模式用于定义实例属性，原型模式用于定义方法和共享的属性
+混合模式共享着对相同方法的引用，又保证了每个实例有自己的私有属性。最大限度的节省了内存。
+
+---
+## [实现继承的多种方式和优缺点](https://blog.csdn.net/qq_44162474/article/details/98489229)
+1. **原型链继承**
+缺点：引用值共享问题，不能传参
+2. **经典继承（借用构造函数）**
+优点：解决了引用值共享问题，可以通过Child向Parent传参
+缺点：多执行一次函数call，Parent上的原型不能被继承
+3. **伪经典继承（组合继承）**：将原型链继承和借用构造函数阶乘结合在一起
+优点（结合了原型链继承和构造函数继承的优点）：Parent上的原型可以被继承，解决了引用值共享的问题，可以通过Child向Parent传参
+缺点：函数多执行了一次call
+4. **原型式继承**
+重点：用一个函数包装一个对象，然后返回这个函数的调用，这个函数就变成了个可以随意增添属性的实例或对象。object.create()就是这个原理。
+特点：类似于复制一个对象，用函数来包装。
+缺点：所有实例都会继承原型上的属性。无法实现复用。（新实例属性都是后面添加的）
+5. **寄生式继承**
+重点：就是给原型式继承外面套了个壳子。
+优点：没有创建自定义类型，因为只是套了个壳子返回对象（这个），这个函数顺理成章就成了创建的新对象。
+缺点：没用到原型，无法复用。
+6. **寄生组合式继承**
+优点：解决调用两次call问题
+
+---
 ## new 一个对象具体做了什么
 1. 创建一个新的空对象
 2. 将this指向该空对象
 3. 将对象的__proto__指向构造函数的prototype
 4. 如果没有显示的return则默认返回this
 
-## 手写Ajax，XMLHttpRequest
-
-## 变量提升
-
-
+---
 ## 举例说明一个匿名函数的典型用例
 立即执行函数 就是一个典型用例
 
-## 指出JS的宿主对象和原生对象的区别，为什么扩展JS内置对象不是好的做法？有哪些内置对象和内置函数？
-[宿主对象、原生对象、内置对象](https://blog.csdn.net/weixin_40387601/article/details/80431670)
+---
+## [宿主对象、原生对象、内置对象](https://blog.csdn.net/weixin_40387601/article/details/80431670)
+**原生对象**：独立于宿主环境的ECMAScript实现提供的对象。本地对象就是 ECMA-262 定义的类（引用类型）。在运行过程中动态创建的对象，需要new
+Object、Function、Array、String、Boolean、Number、Date、RegExp、Error、EvalError、RangeError、ReferenceError、SyntaxError、TypeError、URIError、Global
 
-## document load和document DOMContentLoaded两个事件的区别
+**数组对象**：有宿主提供的对象，在浏览器中window对象以及其下边所有的子对象(如bom、dom等等)，在node中是globla及其子对象，也包含自定义的类对象。也包含new出来的实例对象
+
+### 为什么扩展JS内置对象不是好的做法
+因为你不知道哪一天浏览器或javascript本身就会实现这个方法，而且和你扩展的实现有不一致的表现。到时候你的javascript代码可能已经在无数个页面中执行了数年，而浏览器的实现导致所有使用扩展原型的代码都崩溃了。。。
+
+### JS内置对象
+String对象：字符串对象，提供了对字符串进行操作的属性和方法。
+Array对象：数组对象，提供了数组操作方面的属性和方法。
+Date对象：日期时间对象，可以获取系统的日期时间信息。
+Boolean对象：布尔对象，一个布尔变量就是一个布尔对象。(没有可用的属性和方法)
+Number对象：数值对象。一个数值变量就是一个数值对象。
+Math对象：数学对象，提供了数学运算方面的属性和方法。
+RegExp:正则。
+
+### JS内置函数
+js内置函数是浏览器内核自带的，不用任何函数库引入就可以直接使用的函数。 
+(1)alert函数：显示一个警告对话框，包括一个OK按钮。 
+(2)confirm函数：显示一个确认对话框，包括OK、Cancel按钮。 
+(3)escape函数：将字符转换成Unicode码。 
+(4)eval函数：计算表达式的结果。 
+(5)isNaN函数：测试是(true)否(false)不是一个数字。 
+(6)parseFloat函数：将字符串转换成符点数字形式。 
+(7)parseInt函数：将符串转换成整数数字形式(可指定几进制)。 
+(8)prompt函数：显示一个输入对话框，提示等待用户输入。
+
+
+**内置对象**：
+Global（全局对象）、Math 
+
+**宿主对象**：在浏览器中window对象以及其下边所有的子对象(如bom、dom等等)，在node中是globla及其子对象，也包含自定义的类对象。
+
+
+---
+## [document load和document DOMContentLoaded两个事件的区别](https://blog.csdn.net/weixin_40387601/article/details/80500235)
 DOMContentLoaded: DOM解析完成即触发此事件，不等待styles, images等资源的加载
 load：依赖的资源也已加载完成
 DOMContentLoaded绑定到document，load绑定到window
@@ -1519,28 +1528,73 @@ DOMContentLoaded绑定到document，load绑定到window
 为什么要区分？
 我们需要给一些元素的事件绑定处理函数。但问题是，如果那个元素还没有加载到页面上，但是绑定事件已经执行完了，是没有效果的。
 这两个事件大致就是用来避免这样一种情况，将绑定的函数放在这两个事件的回调中，保证能在页面的某些元素加载完毕之后再绑定事件的函数。
-DOM文档加载的步骤为
-解析HTML结构。
-加载外部脚本和样式表文件。
-解析并执行脚本代码。
-DOM树构建完成。//DOMContentLoaded
-加载图片等外部文件。
-页面加载完毕。//load
+
+DOM文档加载的步骤为:
+1. 解析HTML结构。
+2. 加载外部脚本和样式表文件。
+3. 解析并执行脚本代码。
+4. DOM树构建完成。//DOMContentLoaded
+5. 加载图片等外部文件。
+6. 页面加载完毕。//load
 在第4步，会触发DOMContentLoaded事件。在第6步，触发load事件。
-[onload 和 DOMContentLoaded](https://blog.csdn.net/weixin_40387601/article/details/80500235)
 
-## 什么是"use strict",好处和坏处
-开启严格模式。好处是规范js的语法，提前避免一些不可预料的语法问题。
+---
+## [JS重载(多态)](https://smartline.cc/js-fun-reload/)
+函数重载就是使用相同函数名实现不同的函数功能。主要逻辑是通过根据函数argument对象类型判断函数当前应该执行的逻辑。
 
-## JS如何实现重载和多态
-函数重载就是使用相同函数名实现不同的函数功能。
-[JS重载(多态)](https://smartline.cc/js-fun-reload/)
-
+---
 ## 常用的数组api，字符串api
-数组API：indexOf、reverse、push、pop、shift、unshift、splice、slice、sort、forEach、filter、map
-字符串API：charAt、indexOf、toUpperCase、toLowerCase、search、substr、substring、split
+数组API：indexOf、reverse、push、pop、shift、unshift、splice、slice、sort、forEach、filter、map、join
 
-## 原生事件绑定（跨浏览器），dom0和dom2的区别？
+**会改变数组的有**：pop / push / shift / unshift / splice / reverse / sort / forEach
+forEach()方法不会返回执行结果，而是undefined。也就是说，forEach()会修改原来的数组。而map()方法会得到一个新的数组并返回。
+
+join()：数组转为字符串，可带中间符号
+push()：数组尾部添加内容，返回新长度
+pop()：数组尾部删除一条内容，返回长度
+unshift()：数组头部添加内容，返回新长度
+shift()：数组头部删除一条内容，返回删除内容
+sort()：数组内容从大到小排序
+reverse()：反转数组内容项
+concat()：拼接数组，若无内容复制数组内容
+slice()：截取数组，从指定下标开始
+splice()：删除、插入、替换；
+删除：2 个参数：要删除的第一项的位置和要删除的项数。
+插入：3 个参数：起始位置、 0（要删除的项数）和要插入的项。
+替换：3 个参数：起始位置、要删除的项数和要插入的任意数量的项。
+
+---
+
+## 字符串方法
+
+字符串API：charAt、indexOf、toUpperCase、toLowerCase、search、substr、substring、split
+charAt()：根据下标找到对应值
+charCodeAt()：通过下标值找到对应字符Unicode编码
+indexOf()：通过字符查找对应下标（首次出现）
+lastIndexOf()：通过字符找最后一次出现的下标值
+slice()：截取字符串，2个参数，（起始位置，结束位置）
+split()：把字符串按分隔符分割成数组
+substring()：截取字符串，（起始位置，结束位置）
+substr()：截取指定位置和长度的字符串，（起始位置，长度）
+toLowerCase()：字符串转为小写
+toUpperCase()：字符串转成大写
+trim()：去掉字符串前后所有空格
+substr是从起始索引号开始提取指定长度的字符串；substring是提取字符串中两个指定索引号之间的字符
+
+---
+## [DOM事件的绑定的几种方式](https://juejin.cn/post/6844903758996963342)
+1. 元素行内绑定
+`<div id="btn" onclick="func()"></div>`
+2. JS代码绑定
+``` javascript
+document.getElementById('btn').onclick = func()
+```
+3. 绑定事件监听函数
+document.getElementById('btn').addEventListener('click', func(), false)
+
+特点：用 "addeventlistener" 可以绑定多次同一个事件，且都会执行，而在DOM结构如果绑定两个 "onclick" 事件，只会执行第一个；在脚本通过匿名函数的方式绑定的只会执行最后一个事件。
+
+## dom0和dom2的区别？
 **dom0是属性绑定**
 var btn = document.getElementById("btn");
   btn.onclick = function(){
@@ -1554,45 +1608,20 @@ var btn = document.getElementById("btn");
  btn.addEventListener("click",handler,false);  
  btn.removeEventListener("click",handler,false);//移除
 
+
+---
 ## 给定一个元素获取它相对于视图窗口的坐标
-1. clientHeight和clientWidth用于描述元素内尺寸，是指 元素内容+内边距 大小，不包括边框（IE下实际包括）、外边距、滚动条部分 
-2. offsetHeight和offsetWidth用于描述元素外尺寸，是指 元素内容+内边距+边框，不包括外边距和滚动条部分 
-3. clientTop和clientLeft返回内边距的边缘和边框的外边缘之间的水平和垂直距离，也就是左，上边框宽度 
-4. offsetTop和offsetLeft表示该元素的左上角（边框外边缘）与已定位的父容器（offsetParent对象）左上角的距离 
-5. offsetParent对象是指元素最近的定位（relative,absolute）祖先元素，递归上溯，如果没有祖先元素是定位的话，会返回null
+1. **clientHeight**和**clientWidth**用于描述元素内尺寸，是指 **元素内容+内边距** 大小，不包括边框（IE下实际包括）、外边距、滚动条部分 
+2. **offsetHeight**和**offsetWidth**用于描述元素外尺寸，是指 **元素内容+内边距+边框**，不包括外边距和滚动条部分 
+3. **clientTop**和**clientLeft**返回内边距的边缘和边框的外边缘之间的水平和垂直距离，也就是左，上边框宽度 
+4. **offsetTop**和**offsetLeft**表示该元素的左上角（边框外边缘）与已定位的父容器（offsetParent对象）左上角的距离 
+5. **offsetParent**对象是指元素最近的定位（relative,absolute）祖先元素，递归上溯，如果没有祖先元素是定位的话，会返回null
 
-## 如何实现图片滚动懒加载
-
+---
 ## 正则表达式的函数怎么使用？
 
-## 深拷贝
-``` JavaScript
-// 乞丐版
-JSON.parse(JSON.stringify());
-// 基础版
-function clone(target) {
-    let cloneTarget = {};
-    for (const key in target) {
-        cloneTarget[key] = target[key];
-    }
-    return cloneTarget;
-};
-// 深层次拷贝引入递归
-function clone(target) {
-    if (typeof target === 'object') {
-        let cloneTarget = {};
-        for (const key in target) {
-            cloneTarget[key] = clone(target[key]);
-        }
-        return cloneTarget;
-    } else {
-        return target;
-    }
-};
-```
-[深拷贝操作](https://juejin.cn/post/6844903929705136141)
 
-
+---
 ## web端cookie的设置和获取
 - 创建 cookie 如下所示：
 `document.cookie="username=John Doe";`
@@ -1626,19 +1655,6 @@ setTimeout属于宏任务，promise属于微任务，在同一事件流里面，
 ![location对象](https://ucc.alicdn.com/pic/developer-ecology/de5fcae4295f4dc5bb07203b3d695684.png)
 history 是内存中专门保存当前窗口打开后成功访问过得所有 url 的历史记录数组，history 数组不可做任何修改操作，功能有前进、后退和刷新。
 ![history对象](https://ucc.alicdn.com/pic/developer-ecology/fd674fff63e44451827c59cf5dee3a5a.png)
-
----
-## [DOM事件的绑定的几种方式](https://juejin.cn/post/6844903758996963342)
-1. 元素行内绑定
-`<div id="btn" onclick="func()"></div>`
-2. JS代码绑定
-``` javascript
-document.getElementById('btn').onclick = func()
-```
-3. 绑定事件监听函数
-document.getElementById('btn').addEventListener('click', func(), false)
-
-特点：用 "addeventlistener" 可以绑定多次同一个事件，且都会执行，而在DOM结构如果绑定两个 "onclick" 事件，只会执行第一个；在脚本通过匿名函数的方式绑定的只会执行最后一个事件。
 
 ---
 ## [DOM事件中target和currentTarget的区别](https://www.jianshu.com/p/1dd668ccc97a)

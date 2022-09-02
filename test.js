@@ -1,7 +1,4 @@
-function func(x){
-  console.log(typeof x, arguments.length);
-  }
+let { name, age } = { name: '王三', age: 16 }
 
-func(); //==> "undefined", 0
-func(7); //==> "number", 1
-func(1, 2, 3); //==> "string", 3
+console.log(typeof name)
+console.log(typeof age)

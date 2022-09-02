@@ -147,46 +147,7 @@ IIFE：Immediately-invoked function expression 立即执行函数表达式
 [IIFE](https://yuguang.blog.csdn.net/article/details/106824296)
 
 ---
-29. Function.prototype.apply方法的用途是什么？
-在调用一个存在的函数时，你可以为其指定一个 this 对象。this 指当前对象，也就是正在调用这个函数的对象。使用 apply，你可以只写一次这个方法然后在另一个对象中继承它，而不用在新对象中重复写该方法。
-
-obj.apply(thisArg, argsArray) or obj.apply(thisArg)
-参数：
-thisArg
-在 func 函数运行时使用的 this 值。请注意，this 可能不是该方法看到的实际值：如果这个函数处于非严格模式下，则指定为 null 或 undefined 时会自动替换为指向全局对象，原始值会被包装。
-
-argsArray 可选
-一个数组或者类数组对象，其中的数组元素将作为单独的参数传给 func 函数。如果该参数的值为 null 或  undefined，则表示不需要传入任何参数。
-``` JavaScript
-var array1 = [12 , "foo" , {name "Joe"} , -2458]; 
-var array2 = ["Doe" , 555 , 100]; 
-Array.prototype.push.apply(array1, array2); 
-Array.prototype.push.apply(array1, "Doe", 555, 100); 
-```
-
----
-30.  Function.prototype.call方法的用途是什么？
-类似apply()，区别在于 call() 方法接受的是一个参数列表，而 apply() 方法接受的是一个包含多个参数的数组。
-
-
----
-31.  Function.prototype.bind的用途是什么？
-bind() 方法创建一个新的函数，在 bind() 被调用时，这个新函数的 this 被指定为 bind() 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。
-[Apply, call, bind](https://www.cnblogs.com/coco1s/p/4833199.html)
-``` JavaScript
-var bar = function(){
-console.log(this.x);
-}
-var foo = {
-x:3
-}
-bar(); // undefined
-var func = bar.bind(foo);
-func(); // 3
-```
-
----
-32. Function.prototype.toString的用途是什么？
+1.  Function.prototype.toString的用途是什么？
     返回一个表示当前函数源代码的字符串。
 
 ---
@@ -288,10 +249,7 @@ arguments对象是函数中传递的参数值的集合。它是一个类似数�
 const o2 = Object.create(null);
 
 ---
-41.  为什么在调用这个函数时，代码中的`b`会变成一个全局变量?
-
----
-42. ECMAScript是什么？
+1.  ECMAScript是什么？
 ECMAScript是JavaScript的一种语言规范
 ES5的特性：
     - 严格模式 use strict
@@ -429,18 +387,12 @@ Astnchronous Javascript + XML = 异步传输 + js + xml
 ![AJAX工作原理](https://www.runoob.com/wp-content/uploads/2013/09/ajax-yl.png)
 
 ---
-63.  如何在JavaScript中创建对象？
-- obj = {} 使用字面量
-- 构造函数，然后obj = new Object
-- Object.create(obj)
-
----
-64.  Object.seal 和 Object.freeze 方法之间有什么区别？
+1.   Object.seal 和 Object.freeze 方法之间有什么区别？
 Object.freeze 是直接冻结对象，对象及其原型完全完全不能修改，属性不可写。
 Object.seal 是密封对象，如果属性可写，那么还是可以修改其属性值。
 
 ---
-65. 对象中的 in 运算符和 hasOwnProperty 方法有什么区别？
+1.  对象中的 in 运算符和 hasOwnProperty 方法有什么区别？
 in会查找对象本身与其原型链上是否有其指定属性，而hasOwnProperty指挥查询对象本身属性，而不去查找它的原型链
 
 ---
