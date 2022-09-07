@@ -1345,6 +1345,7 @@ xml和json都用在项目交互下，xml多用于做配置文件，json用于数
 [常用DOM操作API](https://juejin.cn/post/6844903604445249543)
 
 ---
+[DOM事件模型](https://juejin.cn/post/6844903850323755021)
 ## 解释一下事件冒泡和事件捕获
  element.addEventListener(event, function, useCapture)
  | 参数 | 描述 |

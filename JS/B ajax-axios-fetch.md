@@ -178,3 +178,6 @@ fetch没有办法原生监测请求的进度，而XHR可以
 另外还有跨域方案不成熟等。
 
 Jquery老迈笨拙，fetch年轻稚嫩，只有Axios正当其年！
+
+
+![请求和响应拦截器](https://segmentfault.com/a/1190000040366591)
